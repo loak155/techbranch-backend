@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package loak155.techbranch.proto.comment;
+
+option go_package = "github.com/loak155/techbranch-backend/proto/comment";
+
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+service CommentService {
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse);
+  rpc GetComment(GetCommentRequest) returns (GetCommentResponse);
+  rpc ListCommentsByArticleID(ListCommentsByArticleIDRequest) returns (ListCommentsByArticleIDResponse);
+  rpc UpdateComment(UpdateCommentRequest) returns (UpdateCommentResponse);
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse);
+	rpc DeleteCommentByUserID(DeleteCommentByUserIDRequest) returns (DeleteCommentByUserIDResponse);
+	rpc DeleteCommentByUserIDCompensate(DeleteCommentByUserIDRequest) returns (DeleteCommentByUserIDResponse);
+	rpc DeleteCommentByArticleID(DeleteCommentByArticleIDRequest) returns (DeleteCommentByArticleIDResponse);
+	rpc DeleteCommentByArticleIDCompensate(DeleteCommentByArticleIDRequest) returns (DeleteCommentByArticleIDResponse);
+}
+
+message Comment {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 article_id = 3;
+  string content = 4 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateCommentRequest {
+  Comment comment = 1;
+}
+
+message CreateCommentResponse {
+  Comment comment = 1;
+}
+
+message GetCommentRequest {
+  int32 id = 1;
+}
+
+message GetCommentResponse {
+  Comment comment = 1;
+}
+
+message ListCommentsByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message ListCommentsByArticleIDResponse {
+  repeated Comment comments = 1;
+}
+
+message UpdateCommentRequest {
+  Comment comment = 1;
+}
+
+message UpdateCommentResponse {
+  bool success = 1;
+}
+
+message DeleteCommentRequest {
+  uint64 id = 1;
+}
+
+message DeleteCommentResponse {
+  bool success = 1;
+}
+
+message DeleteCommentByUserIDRequest {
+  uint64 user_id = 1;
+}
+
+message DeleteCommentByUserIDResponse {
+  bool success = 1;
+}
+
+message DeleteCommentByArticleIDRequest {
+  uint64 article_id = 1;
+}
+
+message DeleteCommentByArticleIDResponse {
+  bool success = 1;
+}

@@ -1,0 +1,112 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15.1-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+    networks:
+      - techbranch-network
+  # gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build/docker/gateway/Dockerfile
+  #   image: techbranch/gateway
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     PORT: 8080
+  #     AUTH_SERVICE_HOST: auth
+  #     AUTH_SERVICE_PORT: 8082
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - techbranch-network
+  # user:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build/docker/user/Dockerfile
+  #   image: techbranch/user
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     PORT: 8081
+  #     DB_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - techbranch-network
+  # auth:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build/docker/auth/Dockerfile
+  #   image: techbranch/auth
+  #   ports:
+  #     - 8082:8082
+  #   environment:
+  #     PORT: 8082
+  #     DB_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+  #     SECRET_KEY: secret
+  #     USER_SERVICE_HOST: user
+  #     USER_SERVICE_PORT: 8081
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - techbranch-network
+  # article:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build/docker/article/Dockerfile
+  #   image: techbranch/article
+  #   ports:
+  #     - 8083:8083
+  #   environment:
+  #     PORT: 8083
+  #     DB_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - techbranch-network
+  # bookmark:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build/docker/bookmark/Dockerfile
+  #   image: techbranch/bookmark
+  #   ports:
+  #     - 8084:8084
+  #   environment:
+  #     PORT: 8084
+  #     DB_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+  #     ARTICLE_SERVICE_HOST: article
+  #     ARTICLE_SERVICE_PORT: 8083
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - techbranch-network
+  # comment:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build/docker/comment/Dockerfile
+  #   image: techbranch/comment
+  #   ports:
+  #     - 8085:8085
+  #   environment:
+  #     PORT: 8085
+  #     DB_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+  #     SECRET_KEY: secret
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - techbranch-network
+networks:
+  techbranch-network:
+volumes:
+  db-data:

@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package loak155.techbranch.proto.auth;
+
+option go_package = "github.com/loak155/techbranch-backend/proto/auth";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+// import "proto/user/user.proto";
+
+service AuthService {
+  rpc Signup(SignupRequest) returns (SignupResponse){
+    option (google.api.http) = {
+      post: "/auth/signup"
+      body: "*"
+    };
+  }
+  rpc Signin(SigninRequest) returns (SigninResponse){
+    option (google.api.http) = {
+      post: "/auth/signin"
+      body: "*"
+    };
+  }
+  rpc GenerateToken(GenerateTokenRequest) returns (GenerateTokenResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+}
+
+message User {
+  int32 id = 1;
+  string username = 2 [(validate.rules).string = {min_len: 6, max_len: 20}];
+  string email = 3 [(validate.rules).string.email = true];
+  string password = 4 [(validate.rules).string = {min_len: 8, max_len: 30}];
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message SignupRequest {
+  // user.User user = 1;
+  User user = 1;
+}
+
+message SignupResponse {
+  // user.User user = 1;
+  User user = 1;
+}
+
+message SigninRequest {
+  // user.User user = 1;
+  User user = 1;
+}
+
+message SigninResponse {
+  string token = 1;
+}
+
+message GenerateTokenRequest {
+  int32 user_id = 1;
+}
+
+message GenerateTokenResponse {
+  string token = 1;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+}
+
+message RefreshTokenRequest {
+  string token = 1;
+}
+
+message RefreshTokenResponse {
+  string token = 1;
+}

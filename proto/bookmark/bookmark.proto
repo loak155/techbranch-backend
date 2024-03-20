@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package loak155.techbranch.proto.bookmark;
+
+option go_package = "github.com/loak155/techbranch-backend/proto/bookmark";
+
+import "google/protobuf/timestamp.proto";
+
+service BookmarkService {
+  rpc CreateBookmark(CreateBookmarkRequest) returns (CreateBookmarkResponse){
+    option (google.api.http) = {
+      post: "/bookmarks"
+      body: "*"
+    };
+  }
+  rpc CreateBookmarkCompensate(CreateBookmarkRequest) returns (CreateBookmarkResponse);
+  rpc GetBookmark(GetBookmarkRequest) returns (GetBookmarkResponse);
+  rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarksResponse);
+  rpc ListBookmarksByUserID(ListBookmarksByUserIDRequest) returns (ListBookmarksByUserIDResponse);
+  rpc ListBookmarksByArticleID(ListBookmarksByArticleIDRequest) returns (ListBookmarksByArticleIDResponse);
+  rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse){
+    option (google.api.http) = {
+      delete: "/bookmarks/{bookmark.id}"
+    };
+  }
+	rpc DeleteBookmarkByUserID(DeleteBookmarkByUserIDRequest) returns (DeleteBookmarkByUserIDResponse);
+	rpc DeleteBookmarkByUserIDCompensate(DeleteBookmarkByUserIDRequest) returns (DeleteBookmarkByUserIDResponse);
+	rpc DeleteBookmarkByArticleID(DeleteBookmarkByArticleIDRequest) returns (DeleteBookmarkByArticleIDResponse);
+	rpc DeleteBookmarkByArticleIDCompensate(DeleteBookmarkByArticleIDRequest) returns (DeleteBookmarkByArticleIDResponse);
+}
+
+message Bookmark {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 article_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message CreateBookmarkRequest {
+  Bookmark bookmark = 1;
+}
+
+message CreateBookmarkResponse {
+  Bookmark bookmark = 1;
+}
+
+message GetBookmarkRequest {
+  int32 id = 1;
+}
+
+message GetBookmarkResponse {
+  Bookmark bookmark = 1;
+}
+
+message ListBookmarksRequest {
+}
+
+message ListBookmarksResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message ListBookmarksByUserIDRequest {
+  int32 user_id = 1;
+}
+
+message ListBookmarksByUserIDResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message ListBookmarksByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message ListBookmarksByArticleIDResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message DeleteBookmarkRequest {
+  Bookmark bookmark = 1;
+}
+
+message DeleteBookmarkResponse {
+  bool success = 1;
+}
+
+message DeleteBookmarkByUserIDRequest {
+  uint64 user_id = 1;
+}
+
+message DeleteBookmarkByUserIDResponse {
+  bool success = 1;
+}
+
+message DeleteBookmarkByArticleIDRequest {
+  uint64 article_id = 1;
+}
+
+message DeleteBookmarkByArticleIDResponse {
+  bool success = 1;
+}

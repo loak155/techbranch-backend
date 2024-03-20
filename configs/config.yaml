@@ -1,0 +1,61 @@
+gateway:
+  server:
+    name: 'gateway'
+    host: 'localhost'
+    port: 8080
+user:
+  server:
+    name: 'user'
+    host: 'localhost'
+    port: 8081
+  db:
+    host: 'localhost'
+    # host: 'db'
+    port: 5432
+    user: 'postgres'
+    password: 'postgres'
+    name: 'postgres'
+auth:
+  server:
+    name: 'auth'
+    host: 'localhost'
+    port: 8082
+article:
+  server:
+    name: 'article'
+    host: 'localhost'
+    port: 8083
+  db:
+    host: 'localhost'
+    # host: 'db'
+    port: 5432
+    user: 'postgres'
+    password: 'postgres'
+    name: 'postgres'
+bookmark:
+  server:
+    name: 'bookmark'
+    host: 'localhost'
+    port: 8084
+  db:
+    host: 'localhost'
+    # host: 'db'
+    port: 5432
+    user: 'postgres'
+    password: 'postgres'
+    name: 'postgres'
+comment:
+  server:
+    name: 'article'
+    host: 'localhost'
+    port: 8085
+  db:
+    host: 'localhost'
+    # host: 'db'
+    port: 5432
+    user: 'postgres'
+    password: 'postgres'
+    name: 'postgres'
+jwt:
+  secret: 'secret'
+  expires: 36000

@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package loak155.techbranch.proto.article;
+
+option go_package = "github.com/loak155/techbranch-backend/proto/article";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+service ArticleService {
+  rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse){
+    option (google.api.http) = {
+      post: "/articles"
+      body: "*"
+    };
+  }
+  rpc GetArticle(GetArticleRequest) returns (GetArticleResponse){
+  option (google.api.http) = {
+      get: "/articles/{id}"
+    };
+  }
+  rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse){
+    option (google.api.http) = {
+        get: "/articles"
+      };
+    }
+  rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse){
+    option (google.api.http) = {
+      put: "/articles"
+      body: "*"
+    };
+  }
+  rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse){
+    option (google.api.http) = {
+      delete: "/articles/{id}"
+    };
+  }
+  rpc IncrementBookmarksCount(IncrementBookmarksCountRequest) returns (IncrementBookmarksCountResponse);
+  rpc IncrementBookmarksCountCompensate(IncrementBookmarksCountRequest) returns (IncrementBookmarksCountResponse);
+  rpc DecrementBookmarksCount(DecrementBookmarksCountRequest) returns (DecrementBookmarksCountResponse);
+  rpc DecrementBookmarksCountCompensate(DecrementBookmarksCountRequest) returns (DecrementBookmarksCountResponse);
+}
+
+message Article {
+  int32 id = 1;
+  string title = 2 [(validate.rules).string.min_len = 1];
+  string url = 3 [(validate.rules).string.uri = true];
+  int32 bookmarkCount = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateArticleRequest {
+  Article article = 1;
+}
+
+message CreateArticleResponse {
+  Article article = 1;
+}
+
+message GetArticleRequest {
+  int32 id = 1;
+}
+
+message GetArticleResponse {
+  Article article = 1;
+}
+
+message ListArticlesRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message ListArticlesResponse {
+  repeated Article articles = 1;
+}
+
+message UpdateArticleRequest {
+  Article article = 1;
+}
+
+message UpdateArticleResponse {
+  bool success = 1;
+}
+
+message DeleteArticleRequest {
+  uint64 id = 1;
+}
+
+message DeleteArticleResponse {
+  bool success = 1;
+}
+
+message IncrementBookmarksCountRequest {
+  int32 id = 1;
+}
+
+message IncrementBookmarksCountResponse {
+  bool success = 1;
+}
+
+message DecrementBookmarksCountRequest {
+  int32 id = 1;
+}
+
+message DecrementBookmarksCountResponse {
+  bool success = 1;
+}
