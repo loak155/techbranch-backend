@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package techbranch.article;
+
+option go_package = "github.com/loak155/techbranch-backend/proto/article";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+service ArticleService {
+  rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse){
+    option (google.api.http) = {
+      post: "/api/v1/articles"
+      body: "*"
+    };
+  }
+  rpc GetArticle(GetArticleRequest) returns (GetArticleResponse){
+  option (google.api.http) = {
+      get: "/api/v1/articles/{id}"
+    };
+  }
+  rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse){
+    option (google.api.http) = {
+        get: "/api/v1/articles"
+      };
+    }
+  rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse){
+    option (google.api.http) = {
+      put: "/api/v1/articles"
+      body: "*"
+    };
+  }
+  rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse){
+    option (google.api.http) = {
+      delete: "/api/v1/articles/{id}"
+    };
+  }
+}
+
+message Article {
+  int32 id = 1;
+  string title = 2 [(validate.rules).string.min_len = 1];
+  string url = 3 [(validate.rules).string.uri = true];
+  bytes image = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateArticleRequest {
+  string title = 1 [(validate.rules).string.min_len = 1];
+  string url = 2 [(validate.rules).string.uri = true];
+}
+
+message CreateArticleResponse {
+  Article article = 1;
+}
+
+message GetArticleRequest {
+  int32 id = 1;
+}
+
+message GetArticleResponse {
+  Article article = 1;
+}
+
+message ListArticlesRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message ListArticlesResponse {
+  repeated Article articles = 1;
+}
+
+message UpdateArticleRequest {
+  Article article = 1;
+}
+
+message UpdateArticleResponse {
+  bool success = 1;
+}
+
+message DeleteArticleRequest {
+  uint64 id = 1;
+}
+
+message DeleteArticleResponse {
+  bool success = 1;
+}
