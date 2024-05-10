@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	article "github.com/loak155/techbranch-backend/services/article/proto"
+	proto "github.com/loak155/techbranch-backend/services/article/proto"
 	grpc "google.golang.org/grpc"
 )
 
@@ -37,14 +37,14 @@ func (m *MockArticleServiceClient) EXPECT() *MockArticleServiceClientMockRecorde
 }
 
 // CreateArticle mocks base method.
-func (m *MockArticleServiceClient) CreateArticle(ctx context.Context, in *article.CreateArticleRequest, opts ...grpc.CallOption) (*article.CreateArticleResponse, error) {
+func (m *MockArticleServiceClient) CreateArticle(ctx context.Context, in *proto.CreateArticleRequest, opts ...grpc.CallOption) (*proto.CreateArticleResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateArticle", varargs...)
-	ret0, _ := ret[0].(*article.CreateArticleResponse)
+	ret0, _ := ret[0].(*proto.CreateArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,14 +57,14 @@ func (mr *MockArticleServiceClientMockRecorder) CreateArticle(ctx, in interface{
 }
 
 // DeleteArticle mocks base method.
-func (m *MockArticleServiceClient) DeleteArticle(ctx context.Context, in *article.DeleteArticleRequest, opts ...grpc.CallOption) (*article.DeleteArticleResponse, error) {
+func (m *MockArticleServiceClient) DeleteArticle(ctx context.Context, in *proto.DeleteArticleRequest, opts ...grpc.CallOption) (*proto.DeleteArticleResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteArticle", varargs...)
-	ret0, _ := ret[0].(*article.DeleteArticleResponse)
+	ret0, _ := ret[0].(*proto.DeleteArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -77,14 +77,14 @@ func (mr *MockArticleServiceClientMockRecorder) DeleteArticle(ctx, in interface{
 }
 
 // GetArticle mocks base method.
-func (m *MockArticleServiceClient) GetArticle(ctx context.Context, in *article.GetArticleRequest, opts ...grpc.CallOption) (*article.GetArticleResponse, error) {
+func (m *MockArticleServiceClient) GetArticle(ctx context.Context, in *proto.GetArticleRequest, opts ...grpc.CallOption) (*proto.GetArticleResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetArticle", varargs...)
-	ret0, _ := ret[0].(*article.GetArticleResponse)
+	ret0, _ := ret[0].(*proto.GetArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -97,14 +97,14 @@ func (mr *MockArticleServiceClientMockRecorder) GetArticle(ctx, in interface{}, 
 }
 
 // ListArticles mocks base method.
-func (m *MockArticleServiceClient) ListArticles(ctx context.Context, in *article.ListArticlesRequest, opts ...grpc.CallOption) (*article.ListArticlesResponse, error) {
+func (m *MockArticleServiceClient) ListArticles(ctx context.Context, in *proto.ListArticlesRequest, opts ...grpc.CallOption) (*proto.ListArticlesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ListArticles", varargs...)
-	ret0, _ := ret[0].(*article.ListArticlesResponse)
+	ret0, _ := ret[0].(*proto.ListArticlesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -117,14 +117,14 @@ func (mr *MockArticleServiceClientMockRecorder) ListArticles(ctx, in interface{}
 }
 
 // UpdateArticle mocks base method.
-func (m *MockArticleServiceClient) UpdateArticle(ctx context.Context, in *article.UpdateArticleRequest, opts ...grpc.CallOption) (*article.UpdateArticleResponse, error) {
+func (m *MockArticleServiceClient) UpdateArticle(ctx context.Context, in *proto.UpdateArticleRequest, opts ...grpc.CallOption) (*proto.UpdateArticleResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateArticle", varargs...)
-	ret0, _ := ret[0].(*article.UpdateArticleResponse)
+	ret0, _ := ret[0].(*proto.UpdateArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -160,10 +160,10 @@ func (m *MockArticleServiceServer) EXPECT() *MockArticleServiceServerMockRecorde
 }
 
 // CreateArticle mocks base method.
-func (m *MockArticleServiceServer) CreateArticle(arg0 context.Context, arg1 *article.CreateArticleRequest) (*article.CreateArticleResponse, error) {
+func (m *MockArticleServiceServer) CreateArticle(arg0 context.Context, arg1 *proto.CreateArticleRequest) (*proto.CreateArticleResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateArticle", arg0, arg1)
-	ret0, _ := ret[0].(*article.CreateArticleResponse)
+	ret0, _ := ret[0].(*proto.CreateArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -175,10 +175,10 @@ func (mr *MockArticleServiceServerMockRecorder) CreateArticle(arg0, arg1 interfa
 }
 
 // DeleteArticle mocks base method.
-func (m *MockArticleServiceServer) DeleteArticle(arg0 context.Context, arg1 *article.DeleteArticleRequest) (*article.DeleteArticleResponse, error) {
+func (m *MockArticleServiceServer) DeleteArticle(arg0 context.Context, arg1 *proto.DeleteArticleRequest) (*proto.DeleteArticleResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteArticle", arg0, arg1)
-	ret0, _ := ret[0].(*article.DeleteArticleResponse)
+	ret0, _ := ret[0].(*proto.DeleteArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -190,10 +190,10 @@ func (mr *MockArticleServiceServerMockRecorder) DeleteArticle(arg0, arg1 interfa
 }
 
 // GetArticle mocks base method.
-func (m *MockArticleServiceServer) GetArticle(arg0 context.Context, arg1 *article.GetArticleRequest) (*article.GetArticleResponse, error) {
+func (m *MockArticleServiceServer) GetArticle(arg0 context.Context, arg1 *proto.GetArticleRequest) (*proto.GetArticleResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetArticle", arg0, arg1)
-	ret0, _ := ret[0].(*article.GetArticleResponse)
+	ret0, _ := ret[0].(*proto.GetArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -205,10 +205,10 @@ func (mr *MockArticleServiceServerMockRecorder) GetArticle(arg0, arg1 interface{
 }
 
 // ListArticles mocks base method.
-func (m *MockArticleServiceServer) ListArticles(arg0 context.Context, arg1 *article.ListArticlesRequest) (*article.ListArticlesResponse, error) {
+func (m *MockArticleServiceServer) ListArticles(arg0 context.Context, arg1 *proto.ListArticlesRequest) (*proto.ListArticlesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListArticles", arg0, arg1)
-	ret0, _ := ret[0].(*article.ListArticlesResponse)
+	ret0, _ := ret[0].(*proto.ListArticlesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -220,10 +220,10 @@ func (mr *MockArticleServiceServerMockRecorder) ListArticles(arg0, arg1 interfac
 }
 
 // UpdateArticle mocks base method.
-func (m *MockArticleServiceServer) UpdateArticle(arg0 context.Context, arg1 *article.UpdateArticleRequest) (*article.UpdateArticleResponse, error) {
+func (m *MockArticleServiceServer) UpdateArticle(arg0 context.Context, arg1 *proto.UpdateArticleRequest) (*proto.UpdateArticleResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateArticle", arg0, arg1)
-	ret0, _ := ret[0].(*article.UpdateArticleResponse)
+	ret0, _ := ret[0].(*proto.UpdateArticleResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

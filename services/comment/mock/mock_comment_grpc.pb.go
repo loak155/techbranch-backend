@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	comment "github.com/loak155/techbranch-backend/services/comment/proto"
+	proto "github.com/loak155/techbranch-backend/services/comment/proto"
 	grpc "google.golang.org/grpc"
 )
 
@@ -37,14 +37,14 @@ func (m *MockCommentServiceClient) EXPECT() *MockCommentServiceClientMockRecorde
 }
 
 // CreateComment mocks base method.
-func (m *MockCommentServiceClient) CreateComment(ctx context.Context, in *comment.CreateCommentRequest, opts ...grpc.CallOption) (*comment.CreateCommentResponse, error) {
+func (m *MockCommentServiceClient) CreateComment(ctx context.Context, in *proto.CreateCommentRequest, opts ...grpc.CallOption) (*proto.CreateCommentResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateComment", varargs...)
-	ret0, _ := ret[0].(*comment.CreateCommentResponse)
+	ret0, _ := ret[0].(*proto.CreateCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,14 +57,14 @@ func (mr *MockCommentServiceClientMockRecorder) CreateComment(ctx, in interface{
 }
 
 // DeleteComment mocks base method.
-func (m *MockCommentServiceClient) DeleteComment(ctx context.Context, in *comment.DeleteCommentRequest, opts ...grpc.CallOption) (*comment.DeleteCommentResponse, error) {
+func (m *MockCommentServiceClient) DeleteComment(ctx context.Context, in *proto.DeleteCommentRequest, opts ...grpc.CallOption) (*proto.DeleteCommentResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteComment", varargs...)
-	ret0, _ := ret[0].(*comment.DeleteCommentResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -77,14 +77,14 @@ func (mr *MockCommentServiceClientMockRecorder) DeleteComment(ctx, in interface{
 }
 
 // DeleteCommentByArticleID mocks base method.
-func (m *MockCommentServiceClient) DeleteCommentByArticleID(ctx context.Context, in *comment.DeleteCommentByArticleIDRequest, opts ...grpc.CallOption) (*comment.DeleteCommentByArticleIDResponse, error) {
+func (m *MockCommentServiceClient) DeleteCommentByArticleID(ctx context.Context, in *proto.DeleteCommentByArticleIDRequest, opts ...grpc.CallOption) (*proto.DeleteCommentByArticleIDResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteCommentByArticleID", varargs...)
-	ret0, _ := ret[0].(*comment.DeleteCommentByArticleIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByArticleIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -97,14 +97,14 @@ func (mr *MockCommentServiceClientMockRecorder) DeleteCommentByArticleID(ctx, in
 }
 
 // DeleteCommentByArticleIDCompensate mocks base method.
-func (m *MockCommentServiceClient) DeleteCommentByArticleIDCompensate(ctx context.Context, in *comment.DeleteCommentByArticleIDRequest, opts ...grpc.CallOption) (*comment.DeleteCommentByArticleIDResponse, error) {
+func (m *MockCommentServiceClient) DeleteCommentByArticleIDCompensate(ctx context.Context, in *proto.DeleteCommentByArticleIDRequest, opts ...grpc.CallOption) (*proto.DeleteCommentByArticleIDResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteCommentByArticleIDCompensate", varargs...)
-	ret0, _ := ret[0].(*comment.DeleteCommentByArticleIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByArticleIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -117,14 +117,14 @@ func (mr *MockCommentServiceClientMockRecorder) DeleteCommentByArticleIDCompensa
 }
 
 // DeleteCommentByUserID mocks base method.
-func (m *MockCommentServiceClient) DeleteCommentByUserID(ctx context.Context, in *comment.DeleteCommentByUserIDRequest, opts ...grpc.CallOption) (*comment.DeleteCommentByUserIDResponse, error) {
+func (m *MockCommentServiceClient) DeleteCommentByUserID(ctx context.Context, in *proto.DeleteCommentByUserIDRequest, opts ...grpc.CallOption) (*proto.DeleteCommentByUserIDResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteCommentByUserID", varargs...)
-	ret0, _ := ret[0].(*comment.DeleteCommentByUserIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByUserIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -137,14 +137,14 @@ func (mr *MockCommentServiceClientMockRecorder) DeleteCommentByUserID(ctx, in in
 }
 
 // DeleteCommentByUserIDCompensate mocks base method.
-func (m *MockCommentServiceClient) DeleteCommentByUserIDCompensate(ctx context.Context, in *comment.DeleteCommentByUserIDRequest, opts ...grpc.CallOption) (*comment.DeleteCommentByUserIDResponse, error) {
+func (m *MockCommentServiceClient) DeleteCommentByUserIDCompensate(ctx context.Context, in *proto.DeleteCommentByUserIDRequest, opts ...grpc.CallOption) (*proto.DeleteCommentByUserIDResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteCommentByUserIDCompensate", varargs...)
-	ret0, _ := ret[0].(*comment.DeleteCommentByUserIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByUserIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -157,14 +157,14 @@ func (mr *MockCommentServiceClientMockRecorder) DeleteCommentByUserIDCompensate(
 }
 
 // GetComment mocks base method.
-func (m *MockCommentServiceClient) GetComment(ctx context.Context, in *comment.GetCommentRequest, opts ...grpc.CallOption) (*comment.GetCommentResponse, error) {
+func (m *MockCommentServiceClient) GetComment(ctx context.Context, in *proto.GetCommentRequest, opts ...grpc.CallOption) (*proto.GetCommentResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetComment", varargs...)
-	ret0, _ := ret[0].(*comment.GetCommentResponse)
+	ret0, _ := ret[0].(*proto.GetCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -177,14 +177,14 @@ func (mr *MockCommentServiceClientMockRecorder) GetComment(ctx, in interface{}, 
 }
 
 // ListCommentsByArticleID mocks base method.
-func (m *MockCommentServiceClient) ListCommentsByArticleID(ctx context.Context, in *comment.ListCommentsByArticleIDRequest, opts ...grpc.CallOption) (*comment.ListCommentsByArticleIDResponse, error) {
+func (m *MockCommentServiceClient) ListCommentsByArticleID(ctx context.Context, in *proto.ListCommentsByArticleIDRequest, opts ...grpc.CallOption) (*proto.ListCommentsByArticleIDResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ListCommentsByArticleID", varargs...)
-	ret0, _ := ret[0].(*comment.ListCommentsByArticleIDResponse)
+	ret0, _ := ret[0].(*proto.ListCommentsByArticleIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -197,14 +197,14 @@ func (mr *MockCommentServiceClientMockRecorder) ListCommentsByArticleID(ctx, in 
 }
 
 // UpdateComment mocks base method.
-func (m *MockCommentServiceClient) UpdateComment(ctx context.Context, in *comment.UpdateCommentRequest, opts ...grpc.CallOption) (*comment.UpdateCommentResponse, error) {
+func (m *MockCommentServiceClient) UpdateComment(ctx context.Context, in *proto.UpdateCommentRequest, opts ...grpc.CallOption) (*proto.UpdateCommentResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateComment", varargs...)
-	ret0, _ := ret[0].(*comment.UpdateCommentResponse)
+	ret0, _ := ret[0].(*proto.UpdateCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -240,10 +240,10 @@ func (m *MockCommentServiceServer) EXPECT() *MockCommentServiceServerMockRecorde
 }
 
 // CreateComment mocks base method.
-func (m *MockCommentServiceServer) CreateComment(arg0 context.Context, arg1 *comment.CreateCommentRequest) (*comment.CreateCommentResponse, error) {
+func (m *MockCommentServiceServer) CreateComment(arg0 context.Context, arg1 *proto.CreateCommentRequest) (*proto.CreateCommentResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateComment", arg0, arg1)
-	ret0, _ := ret[0].(*comment.CreateCommentResponse)
+	ret0, _ := ret[0].(*proto.CreateCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -255,10 +255,10 @@ func (mr *MockCommentServiceServerMockRecorder) CreateComment(arg0, arg1 interfa
 }
 
 // DeleteComment mocks base method.
-func (m *MockCommentServiceServer) DeleteComment(arg0 context.Context, arg1 *comment.DeleteCommentRequest) (*comment.DeleteCommentResponse, error) {
+func (m *MockCommentServiceServer) DeleteComment(arg0 context.Context, arg1 *proto.DeleteCommentRequest) (*proto.DeleteCommentResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteComment", arg0, arg1)
-	ret0, _ := ret[0].(*comment.DeleteCommentResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -270,10 +270,10 @@ func (mr *MockCommentServiceServerMockRecorder) DeleteComment(arg0, arg1 interfa
 }
 
 // DeleteCommentByArticleID mocks base method.
-func (m *MockCommentServiceServer) DeleteCommentByArticleID(arg0 context.Context, arg1 *comment.DeleteCommentByArticleIDRequest) (*comment.DeleteCommentByArticleIDResponse, error) {
+func (m *MockCommentServiceServer) DeleteCommentByArticleID(arg0 context.Context, arg1 *proto.DeleteCommentByArticleIDRequest) (*proto.DeleteCommentByArticleIDResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCommentByArticleID", arg0, arg1)
-	ret0, _ := ret[0].(*comment.DeleteCommentByArticleIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByArticleIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -285,10 +285,10 @@ func (mr *MockCommentServiceServerMockRecorder) DeleteCommentByArticleID(arg0, a
 }
 
 // DeleteCommentByArticleIDCompensate mocks base method.
-func (m *MockCommentServiceServer) DeleteCommentByArticleIDCompensate(arg0 context.Context, arg1 *comment.DeleteCommentByArticleIDRequest) (*comment.DeleteCommentByArticleIDResponse, error) {
+func (m *MockCommentServiceServer) DeleteCommentByArticleIDCompensate(arg0 context.Context, arg1 *proto.DeleteCommentByArticleIDRequest) (*proto.DeleteCommentByArticleIDResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCommentByArticleIDCompensate", arg0, arg1)
-	ret0, _ := ret[0].(*comment.DeleteCommentByArticleIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByArticleIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -300,10 +300,10 @@ func (mr *MockCommentServiceServerMockRecorder) DeleteCommentByArticleIDCompensa
 }
 
 // DeleteCommentByUserID mocks base method.
-func (m *MockCommentServiceServer) DeleteCommentByUserID(arg0 context.Context, arg1 *comment.DeleteCommentByUserIDRequest) (*comment.DeleteCommentByUserIDResponse, error) {
+func (m *MockCommentServiceServer) DeleteCommentByUserID(arg0 context.Context, arg1 *proto.DeleteCommentByUserIDRequest) (*proto.DeleteCommentByUserIDResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCommentByUserID", arg0, arg1)
-	ret0, _ := ret[0].(*comment.DeleteCommentByUserIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByUserIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -315,10 +315,10 @@ func (mr *MockCommentServiceServerMockRecorder) DeleteCommentByUserID(arg0, arg1
 }
 
 // DeleteCommentByUserIDCompensate mocks base method.
-func (m *MockCommentServiceServer) DeleteCommentByUserIDCompensate(arg0 context.Context, arg1 *comment.DeleteCommentByUserIDRequest) (*comment.DeleteCommentByUserIDResponse, error) {
+func (m *MockCommentServiceServer) DeleteCommentByUserIDCompensate(arg0 context.Context, arg1 *proto.DeleteCommentByUserIDRequest) (*proto.DeleteCommentByUserIDResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCommentByUserIDCompensate", arg0, arg1)
-	ret0, _ := ret[0].(*comment.DeleteCommentByUserIDResponse)
+	ret0, _ := ret[0].(*proto.DeleteCommentByUserIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -330,10 +330,10 @@ func (mr *MockCommentServiceServerMockRecorder) DeleteCommentByUserIDCompensate(
 }
 
 // GetComment mocks base method.
-func (m *MockCommentServiceServer) GetComment(arg0 context.Context, arg1 *comment.GetCommentRequest) (*comment.GetCommentResponse, error) {
+func (m *MockCommentServiceServer) GetComment(arg0 context.Context, arg1 *proto.GetCommentRequest) (*proto.GetCommentResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetComment", arg0, arg1)
-	ret0, _ := ret[0].(*comment.GetCommentResponse)
+	ret0, _ := ret[0].(*proto.GetCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -345,10 +345,10 @@ func (mr *MockCommentServiceServerMockRecorder) GetComment(arg0, arg1 interface{
 }
 
 // ListCommentsByArticleID mocks base method.
-func (m *MockCommentServiceServer) ListCommentsByArticleID(arg0 context.Context, arg1 *comment.ListCommentsByArticleIDRequest) (*comment.ListCommentsByArticleIDResponse, error) {
+func (m *MockCommentServiceServer) ListCommentsByArticleID(arg0 context.Context, arg1 *proto.ListCommentsByArticleIDRequest) (*proto.ListCommentsByArticleIDResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListCommentsByArticleID", arg0, arg1)
-	ret0, _ := ret[0].(*comment.ListCommentsByArticleIDResponse)
+	ret0, _ := ret[0].(*proto.ListCommentsByArticleIDResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -360,10 +360,10 @@ func (mr *MockCommentServiceServerMockRecorder) ListCommentsByArticleID(arg0, ar
 }
 
 // UpdateComment mocks base method.
-func (m *MockCommentServiceServer) UpdateComment(arg0 context.Context, arg1 *comment.UpdateCommentRequest) (*comment.UpdateCommentResponse, error) {
+func (m *MockCommentServiceServer) UpdateComment(arg0 context.Context, arg1 *proto.UpdateCommentRequest) (*proto.UpdateCommentResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateComment", arg0, arg1)
-	ret0, _ := ret[0].(*comment.UpdateCommentResponse)
+	ret0, _ := ret[0].(*proto.UpdateCommentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

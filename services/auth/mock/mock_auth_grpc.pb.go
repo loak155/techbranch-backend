@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	auth "github.com/loak155/techbranch-backend/services/auth/proto"
+	proto "github.com/loak155/techbranch-backend/services/auth/proto"
 	grpc "google.golang.org/grpc"
 )
 
@@ -37,14 +37,14 @@ func (m *MockAuthServiceClient) EXPECT() *MockAuthServiceClientMockRecorder {
 }
 
 // GenerateToken mocks base method.
-func (m *MockAuthServiceClient) GenerateToken(ctx context.Context, in *auth.GenerateTokenRequest, opts ...grpc.CallOption) (*auth.GenerateTokenResponse, error) {
+func (m *MockAuthServiceClient) GenerateToken(ctx context.Context, in *proto.GenerateTokenRequest, opts ...grpc.CallOption) (*proto.GenerateTokenResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GenerateToken", varargs...)
-	ret0, _ := ret[0].(*auth.GenerateTokenResponse)
+	ret0, _ := ret[0].(*proto.GenerateTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,14 +57,14 @@ func (mr *MockAuthServiceClientMockRecorder) GenerateToken(ctx, in interface{}, 
 }
 
 // GetGoogleLoginURL mocks base method.
-func (m *MockAuthServiceClient) GetGoogleLoginURL(ctx context.Context, in *auth.GetGoogleLoginURLRequest, opts ...grpc.CallOption) (*auth.GetGoogleLoginURLResponse, error) {
+func (m *MockAuthServiceClient) GetGoogleLoginURL(ctx context.Context, in *proto.GetGoogleLoginURLRequest, opts ...grpc.CallOption) (*proto.GetGoogleLoginURLResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetGoogleLoginURL", varargs...)
-	ret0, _ := ret[0].(*auth.GetGoogleLoginURLResponse)
+	ret0, _ := ret[0].(*proto.GetGoogleLoginURLResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -76,15 +76,35 @@ func (mr *MockAuthServiceClientMockRecorder) GetGoogleLoginURL(ctx, in interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGoogleLoginURL", reflect.TypeOf((*MockAuthServiceClient)(nil).GetGoogleLoginURL), varargs...)
 }
 
+// GetSigninUser mocks base method.
+func (m *MockAuthServiceClient) GetSigninUser(ctx context.Context, in *proto.GetSigninUserRequest, opts ...grpc.CallOption) (*proto.GetSigninUserResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetSigninUser", varargs...)
+	ret0, _ := ret[0].(*proto.GetSigninUserResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSigninUser indicates an expected call of GetSigninUser.
+func (mr *MockAuthServiceClientMockRecorder) GetSigninUser(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSigninUser", reflect.TypeOf((*MockAuthServiceClient)(nil).GetSigninUser), varargs...)
+}
+
 // GoogleLoginCallback mocks base method.
-func (m *MockAuthServiceClient) GoogleLoginCallback(ctx context.Context, in *auth.GoogleLoginCallbackRequest, opts ...grpc.CallOption) (*auth.GoogleLoginCallbackResponse, error) {
+func (m *MockAuthServiceClient) GoogleLoginCallback(ctx context.Context, in *proto.GoogleLoginCallbackRequest, opts ...grpc.CallOption) (*proto.GoogleLoginCallbackResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GoogleLoginCallback", varargs...)
-	ret0, _ := ret[0].(*auth.GoogleLoginCallbackResponse)
+	ret0, _ := ret[0].(*proto.GoogleLoginCallbackResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -97,14 +117,14 @@ func (mr *MockAuthServiceClientMockRecorder) GoogleLoginCallback(ctx, in interfa
 }
 
 // RefreshToken mocks base method.
-func (m *MockAuthServiceClient) RefreshToken(ctx context.Context, in *auth.RefreshTokenRequest, opts ...grpc.CallOption) (*auth.RefreshTokenResponse, error) {
+func (m *MockAuthServiceClient) RefreshToken(ctx context.Context, in *proto.RefreshTokenRequest, opts ...grpc.CallOption) (*proto.RefreshTokenResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RefreshToken", varargs...)
-	ret0, _ := ret[0].(*auth.RefreshTokenResponse)
+	ret0, _ := ret[0].(*proto.RefreshTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -117,14 +137,14 @@ func (mr *MockAuthServiceClientMockRecorder) RefreshToken(ctx, in interface{}, o
 }
 
 // Signin mocks base method.
-func (m *MockAuthServiceClient) Signin(ctx context.Context, in *auth.SigninRequest, opts ...grpc.CallOption) (*auth.SigninResponse, error) {
+func (m *MockAuthServiceClient) Signin(ctx context.Context, in *proto.SigninRequest, opts ...grpc.CallOption) (*proto.SigninResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Signin", varargs...)
-	ret0, _ := ret[0].(*auth.SigninResponse)
+	ret0, _ := ret[0].(*proto.SigninResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -137,14 +157,14 @@ func (mr *MockAuthServiceClientMockRecorder) Signin(ctx, in interface{}, opts ..
 }
 
 // Signup mocks base method.
-func (m *MockAuthServiceClient) Signup(ctx context.Context, in *auth.SignupRequest, opts ...grpc.CallOption) (*auth.SignupResponse, error) {
+func (m *MockAuthServiceClient) Signup(ctx context.Context, in *proto.SignupRequest, opts ...grpc.CallOption) (*proto.SignupResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Signup", varargs...)
-	ret0, _ := ret[0].(*auth.SignupResponse)
+	ret0, _ := ret[0].(*proto.SignupResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -157,14 +177,14 @@ func (mr *MockAuthServiceClientMockRecorder) Signup(ctx, in interface{}, opts ..
 }
 
 // ValidateToken mocks base method.
-func (m *MockAuthServiceClient) ValidateToken(ctx context.Context, in *auth.ValidateTokenRequest, opts ...grpc.CallOption) (*auth.ValidateTokenResponse, error) {
+func (m *MockAuthServiceClient) ValidateToken(ctx context.Context, in *proto.ValidateTokenRequest, opts ...grpc.CallOption) (*proto.ValidateTokenResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ValidateToken", varargs...)
-	ret0, _ := ret[0].(*auth.ValidateTokenResponse)
+	ret0, _ := ret[0].(*proto.ValidateTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -200,10 +220,10 @@ func (m *MockAuthServiceServer) EXPECT() *MockAuthServiceServerMockRecorder {
 }
 
 // GenerateToken mocks base method.
-func (m *MockAuthServiceServer) GenerateToken(arg0 context.Context, arg1 *auth.GenerateTokenRequest) (*auth.GenerateTokenResponse, error) {
+func (m *MockAuthServiceServer) GenerateToken(arg0 context.Context, arg1 *proto.GenerateTokenRequest) (*proto.GenerateTokenResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GenerateToken", arg0, arg1)
-	ret0, _ := ret[0].(*auth.GenerateTokenResponse)
+	ret0, _ := ret[0].(*proto.GenerateTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -215,10 +235,10 @@ func (mr *MockAuthServiceServerMockRecorder) GenerateToken(arg0, arg1 interface{
 }
 
 // GetGoogleLoginURL mocks base method.
-func (m *MockAuthServiceServer) GetGoogleLoginURL(arg0 context.Context, arg1 *auth.GetGoogleLoginURLRequest) (*auth.GetGoogleLoginURLResponse, error) {
+func (m *MockAuthServiceServer) GetGoogleLoginURL(arg0 context.Context, arg1 *proto.GetGoogleLoginURLRequest) (*proto.GetGoogleLoginURLResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetGoogleLoginURL", arg0, arg1)
-	ret0, _ := ret[0].(*auth.GetGoogleLoginURLResponse)
+	ret0, _ := ret[0].(*proto.GetGoogleLoginURLResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -229,11 +249,26 @@ func (mr *MockAuthServiceServerMockRecorder) GetGoogleLoginURL(arg0, arg1 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGoogleLoginURL", reflect.TypeOf((*MockAuthServiceServer)(nil).GetGoogleLoginURL), arg0, arg1)
 }
 
+// GetSigninUser mocks base method.
+func (m *MockAuthServiceServer) GetSigninUser(arg0 context.Context, arg1 *proto.GetSigninUserRequest) (*proto.GetSigninUserResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSigninUser", arg0, arg1)
+	ret0, _ := ret[0].(*proto.GetSigninUserResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSigninUser indicates an expected call of GetSigninUser.
+func (mr *MockAuthServiceServerMockRecorder) GetSigninUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSigninUser", reflect.TypeOf((*MockAuthServiceServer)(nil).GetSigninUser), arg0, arg1)
+}
+
 // GoogleLoginCallback mocks base method.
-func (m *MockAuthServiceServer) GoogleLoginCallback(arg0 context.Context, arg1 *auth.GoogleLoginCallbackRequest) (*auth.GoogleLoginCallbackResponse, error) {
+func (m *MockAuthServiceServer) GoogleLoginCallback(arg0 context.Context, arg1 *proto.GoogleLoginCallbackRequest) (*proto.GoogleLoginCallbackResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GoogleLoginCallback", arg0, arg1)
-	ret0, _ := ret[0].(*auth.GoogleLoginCallbackResponse)
+	ret0, _ := ret[0].(*proto.GoogleLoginCallbackResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -245,10 +280,10 @@ func (mr *MockAuthServiceServerMockRecorder) GoogleLoginCallback(arg0, arg1 inte
 }
 
 // RefreshToken mocks base method.
-func (m *MockAuthServiceServer) RefreshToken(arg0 context.Context, arg1 *auth.RefreshTokenRequest) (*auth.RefreshTokenResponse, error) {
+func (m *MockAuthServiceServer) RefreshToken(arg0 context.Context, arg1 *proto.RefreshTokenRequest) (*proto.RefreshTokenResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RefreshToken", arg0, arg1)
-	ret0, _ := ret[0].(*auth.RefreshTokenResponse)
+	ret0, _ := ret[0].(*proto.RefreshTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -260,10 +295,10 @@ func (mr *MockAuthServiceServerMockRecorder) RefreshToken(arg0, arg1 interface{}
 }
 
 // Signin mocks base method.
-func (m *MockAuthServiceServer) Signin(arg0 context.Context, arg1 *auth.SigninRequest) (*auth.SigninResponse, error) {
+func (m *MockAuthServiceServer) Signin(arg0 context.Context, arg1 *proto.SigninRequest) (*proto.SigninResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Signin", arg0, arg1)
-	ret0, _ := ret[0].(*auth.SigninResponse)
+	ret0, _ := ret[0].(*proto.SigninResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -275,10 +310,10 @@ func (mr *MockAuthServiceServerMockRecorder) Signin(arg0, arg1 interface{}) *gom
 }
 
 // Signup mocks base method.
-func (m *MockAuthServiceServer) Signup(arg0 context.Context, arg1 *auth.SignupRequest) (*auth.SignupResponse, error) {
+func (m *MockAuthServiceServer) Signup(arg0 context.Context, arg1 *proto.SignupRequest) (*proto.SignupResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Signup", arg0, arg1)
-	ret0, _ := ret[0].(*auth.SignupResponse)
+	ret0, _ := ret[0].(*proto.SignupResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -290,10 +325,10 @@ func (mr *MockAuthServiceServerMockRecorder) Signup(arg0, arg1 interface{}) *gom
 }
 
 // ValidateToken mocks base method.
-func (m *MockAuthServiceServer) ValidateToken(arg0 context.Context, arg1 *auth.ValidateTokenRequest) (*auth.ValidateTokenResponse, error) {
+func (m *MockAuthServiceServer) ValidateToken(arg0 context.Context, arg1 *proto.ValidateTokenRequest) (*proto.ValidateTokenResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ValidateToken", arg0, arg1)
-	ret0, _ := ret[0].(*auth.ValidateTokenResponse)
+	ret0, _ := ret[0].(*proto.ValidateTokenResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
