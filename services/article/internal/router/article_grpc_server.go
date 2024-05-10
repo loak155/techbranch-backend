@@ -56,6 +56,7 @@ func (server *articleGRPCServer) CreateArticle(ctx context.Context, req *pb.Crea
 		Id:        int32(articleRes.ID),
 		Title:     articleRes.Title,
 		Url:       articleRes.Url,
+		Image:     articleRes.Image,
 		CreatedAt: &timestamppb.Timestamp{Seconds: int64(articleRes.CreatedAt.Unix()), Nanos: int32(articleRes.CreatedAt.Nanosecond())},
 		UpdatedAt: &timestamppb.Timestamp{Seconds: int64(articleRes.UpdatedAt.Unix()), Nanos: int32(articleRes.UpdatedAt.Nanosecond())},
 	}
@@ -73,6 +74,7 @@ func (server *articleGRPCServer) GetArticle(ctx context.Context, req *pb.GetArti
 		Id:        int32(articleRes.ID),
 		Title:     articleRes.Title,
 		Url:       articleRes.Url,
+		Image:     articleRes.Image,
 		CreatedAt: &timestamppb.Timestamp{Seconds: int64(articleRes.CreatedAt.Unix()), Nanos: int32(articleRes.CreatedAt.Nanosecond())},
 		UpdatedAt: &timestamppb.Timestamp{Seconds: int64(articleRes.UpdatedAt.Unix()), Nanos: int32(articleRes.UpdatedAt.Nanosecond())},
 	}
@@ -91,6 +93,7 @@ func (server *articleGRPCServer) ListArticles(ctx context.Context, req *pb.ListA
 			Id:        int32(article.ID),
 			Title:     article.Title,
 			Url:       article.Url,
+			Image:     article.Image,
 			CreatedAt: &timestamppb.Timestamp{Seconds: int64(article.CreatedAt.Unix()), Nanos: int32(article.CreatedAt.Nanosecond())},
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(article.UpdatedAt.Unix()), Nanos: int32(article.UpdatedAt.Nanosecond())},
 		})
@@ -109,6 +112,7 @@ func (server *articleGRPCServer) UpdateArticle(ctx context.Context, req *pb.Upda
 		ID:        uint(req.Article.Id),
 		Title:     req.Article.Title,
 		Url:       req.Article.Url,
+		Image:     req.Article.Image,
 		CreatedAt: req.Article.CreatedAt.AsTime(),
 		UpdatedAt: req.Article.UpdatedAt.AsTime(),
 	}

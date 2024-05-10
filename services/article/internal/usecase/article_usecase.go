@@ -53,6 +53,7 @@ func (usecase *articleUsecase) UpdateArticle(ctx context.Context, article domain
 		ID:    article.ID,
 		Title: article.Title,
 		Url:   article.Url,
+		Image: article.Image,
 	}
 	if err := usecase.repo.UpdateArticle(&updatedArticle); err != nil {
 		return false, status.Errorf(codes.Internal, "failed to update article: %v", err)

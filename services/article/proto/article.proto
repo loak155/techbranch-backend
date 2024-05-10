@@ -42,7 +42,7 @@ message Article {
   int32 id = 1;
   string title = 2 [(validate.rules).string.min_len = 1];
   string url = 3 [(validate.rules).string.uri = true];
-  bytes image = 4;
+  string image = 4;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
 }
@@ -50,6 +50,7 @@ message Article {
 message CreateArticleRequest {
   string title = 1 [(validate.rules).string.min_len = 1];
   string url = 2 [(validate.rules).string.uri = true];
+  string image = 3;
 }
 
 message CreateArticleResponse {

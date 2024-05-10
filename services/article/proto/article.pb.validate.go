@@ -281,6 +281,8 @@ func (m *CreateArticleRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	// no validation rules for Image
+
 	if len(errors) > 0 {
 		return CreateArticleRequestMultiError(errors)
 	}
