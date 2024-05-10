@@ -4,7 +4,7 @@
 // - protoc             v4.25.1
 // source: comment.proto
 
-package comment
+package proto
 
 import (
 	context "context"

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package techbranch.user;
 
-option go_package = "github.com/loak155/techbranch-backend/proto/user";
+option go_package = "github.com/loak155/techbranch-backend/services/user/proto";
 
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";

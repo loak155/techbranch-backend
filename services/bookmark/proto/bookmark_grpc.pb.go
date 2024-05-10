@@ -4,7 +4,7 @@
 // - protoc             v4.25.1
 // source: bookmark.proto
 
-package bookmark
+package proto
 
 import (
 	context "context"

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package techbranch.comment;
 
-option go_package = "github.com/loak155/techbranch-backend/proto/comment";
+option go_package = "github.com/loak155/techbranch-backend/services/comment/proto";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
