@@ -47,7 +47,7 @@ func (server *articleGRPCServer) CreateArticle(ctx context.Context, req *pb.Crea
 	}
 
 	res := pb.CreateArticleResponse{}
-	article := domain.Article{Title: req.Title, Url: req.Url}
+	article := domain.Article{Title: req.Title, Url: req.Url, Image: req.Image}
 	articleRes, err := server.usecase.CreateArticle(ctx, article)
 	if err != nil {
 		return nil, err
