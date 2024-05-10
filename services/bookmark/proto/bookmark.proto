@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package techbranch.bookmark;
+
+option go_package = "github.com/loak155/techbranch-backend/proto/bookmark";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service BookmarkService {
+  rpc CreateBookmark(CreateBookmarkRequest) returns (CreateBookmarkResponse){
+    option (google.api.http) = {
+      post: "/api/v1/bookmarks"
+      body: "*"
+    };
+  }
+  rpc GetBookmark(GetBookmarkRequest) returns (GetBookmarkResponse);
+  rpc GetBookmarkCountByArticleID(GetBookmarkCountByArticleIDRequest) returns (GetBookmarkCountByArticleIDResponse){
+    option (google.api.http) = {
+      get: "/api/v1/articles/{article_id}/bookmarks/count"
+    };
+  }
+  rpc ListBookmarks(ListBookmarksRequest) returns (ListBookmarksResponse);
+  rpc ListBookmarksByUserID(ListBookmarksByUserIDRequest) returns (ListBookmarksByUserIDResponse){
+    option (google.api.http) = {
+      get: "/api/v1/users/{user_id}/bookmarks"
+    };
+  }
+  rpc ListBookmarksByArticleID(ListBookmarksByArticleIDRequest) returns (ListBookmarksByArticleIDResponse){
+    option (google.api.http) = {
+      get: "/api/v1/articles/{article_id}/bookmarks"
+    };
+  }
+  rpc DeleteBookmark(DeleteBookmarkRequest) returns (DeleteBookmarkResponse){
+    option (google.api.http) = {
+      delete: "/api/v1/bookmarks"
+      body: "*"
+    };
+  }
+	rpc DeleteBookmarkByUserID(DeleteBookmarkByUserIDRequest) returns (DeleteBookmarkByUserIDResponse);
+	rpc DeleteBookmarkByUserIDCompensate(DeleteBookmarkByUserIDRequest) returns (DeleteBookmarkByUserIDResponse);
+	rpc DeleteBookmarkByArticleID(DeleteBookmarkByArticleIDRequest) returns (DeleteBookmarkByArticleIDResponse);
+	rpc DeleteBookmarkByArticleIDCompensate(DeleteBookmarkByArticleIDRequest) returns (DeleteBookmarkByArticleIDResponse);
+}
+
+message Bookmark {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 article_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message CreateBookmarkRequest {
+  int32 user_id = 1;
+  int32 article_id = 2;
+}
+
+message CreateBookmarkResponse {
+  Bookmark bookmark = 1;
+}
+
+message GetBookmarkRequest {
+  int32 id = 1;
+}
+
+message GetBookmarkResponse {
+  Bookmark bookmark = 1;
+}
+
+message GetBookmarkCountByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message GetBookmarkCountByArticleIDResponse {
+  int32 count = 1;
+}
+
+message ListBookmarksRequest {
+}
+
+message ListBookmarksResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message ListBookmarksByUserIDRequest {
+  int32 user_id = 1;
+}
+
+message ListBookmarksByUserIDResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message ListBookmarksByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message ListBookmarksByArticleIDResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message DeleteBookmarkRequest {
+  int32 user_id = 1;
+  int32 article_id = 2;
+}
+
+message DeleteBookmarkResponse {
+  bool success = 1;
+}
+
+message DeleteBookmarkByUserIDRequest {
+  uint64 user_id = 1;
+}
+
+message DeleteBookmarkByUserIDResponse {
+  bool success = 1;
+}
+
+message DeleteBookmarkByArticleIDRequest {
+  uint64 article_id = 1;
+}
+
+message DeleteBookmarkByArticleIDResponse {
+  bool success = 1;
+}
