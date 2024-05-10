@@ -20,7 +20,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitServer(conf *config.Config, grpcServer *grpc.Server) (bookmark.BookmarkServiceServer, error) {
+func InitServer(conf *config.Config, grpcServer *grpc.Server) (proto.BookmarkServiceServer, error) {
 	gormDB := db.NewBookmarkDB(conf)
 	iBookmarkRepository := repository.NewBookmarkRepository(gormDB)
 	articleServiceClient, err := client.NewArticleGRPCClient(conf)

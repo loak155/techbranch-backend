@@ -19,7 +19,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitServer(conf *config.Config, grpcServer *grpc.Server) (auth.AuthServiceServer, error) {
+func InitServer(conf *config.Config, grpcServer *grpc.Server) (proto.AuthServiceServer, error) {
 	userServiceClient, err := client.NewUserGRPCClient(conf)
 	if err != nil {
 		return nil, err

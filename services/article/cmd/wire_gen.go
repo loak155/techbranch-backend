@@ -18,7 +18,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitServer(conf *config.Config, grpcServer *grpc.Server) (article.ArticleServiceServer, error) {
+func InitServer(conf *config.Config, grpcServer *grpc.Server) (proto.ArticleServiceServer, error) {
 	gormDB := db.NewArticleDB(conf)
 	iArticleRepository := repository.NewArticleRepository(gormDB)
 	iArticleUsecase := usecase.NewArticleUsecase(iArticleRepository)

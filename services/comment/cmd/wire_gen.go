@@ -19,7 +19,7 @@ import (
 
 // Injectors from wire.go:
 
-func InitServer(conf *config.Config, grpcServer *grpc.Server) (comment.CommentServiceServer, error) {
+func InitServer(conf *config.Config, grpcServer *grpc.Server) (proto.CommentServiceServer, error) {
 	gormDB := db.NewCommentDB(conf)
 	iCommentRepository := repository.NewCommentRepository(gormDB)
 	iCommentUsecase := usecase.NewCommentUsecase(iCommentRepository)
