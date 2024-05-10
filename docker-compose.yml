@@ -1,0 +1,140 @@
+version: "3.8"
+services:
+
+  gateway-server:
+    build:
+      context: .
+      dockerfile: ./build/docker/gateway/Dockerfile
+    image: techbranch/gateway
+    ports:
+      - 8080:8080
+    networks:
+      - techbranch-network
+
+  user-server:
+    build:
+      context: .
+      dockerfile: ./services/user/Dockerfile
+    image: techbranch/user
+    ports:
+      - 8081:8081
+    depends_on:
+      - user-db
+    networks:
+      - techbranch-network
+  user-db:
+    image: postgres:15.1-alpine
+    ports:
+      - 54321:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+    networks:
+      - techbranch-network
+
+  auth-server:
+    build:
+      context: .
+      dockerfile: ./services/auth/auth/Dockerfile
+    image: techbranch/auth
+    ports:
+      - 8082:8082
+    depends_on:
+      - user-server
+    networks:
+      - techbranch-network
+
+  article-server:
+    build:
+      context: .
+      dockerfile: ./build/docker/article/Dockerfile
+    image: techbranch/article
+    ports:
+      - 8083:8083
+    depends_on:
+      - article-db
+    networks:
+      - techbranch-network
+  article-db:
+    image: postgres:15.1-alpine
+    ports:
+      - 54323:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    volumes:
+      - article-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+    networks:
+      - techbranch-network
+
+  bookmark-server:
+    build:
+      context: .
+      dockerfile: ./build/docker/bookmark/Dockerfile
+    image: techbranch/bookmark
+    ports:
+      - 8084:8084
+    depends_on:
+      - bookmark-db
+    networks:
+      - techbranch-network
+  bookmark-db:
+    image: postgres:15.1-alpine
+    ports:
+      - 54324:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    volumes:
+      - bookmark-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+    networks:
+      - techbranch-network
+
+  comment-server:
+    build:
+      context: .
+      dockerfile: ./build/docker/comment/Dockerfile
+    image: techbranch/comment
+    ports:
+      - 8085:8085
+    depends_on:
+      - comment-db
+    networks:
+      - techbranch-network
+  comment-db:
+    image: postgres:15.1-alpine
+    ports:
+      - 54325:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    volumes:
+      - comment-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+    networks:
+      - techbranch-network
+
+networks:
+  techbranch-network:
+volumes:
+  user-db-data:
+  article-db-data:
+  bookmark-db-data:
+  comment-db-data:
