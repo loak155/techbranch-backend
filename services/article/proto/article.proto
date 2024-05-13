@@ -36,6 +36,11 @@ service ArticleService {
       delete: "/api/v1/articles/{id}"
     };
   }
+  rpc GetArticleCount(GetArticleCountRequest) returns (GetArticleCountResponse){
+  option (google.api.http) = {
+      get: "/api/v1/articles/count"
+    };
+  }
 }
 
 message Article {
@@ -88,4 +93,11 @@ message DeleteArticleRequest {
 
 message DeleteArticleResponse {
   bool success = 1;
+}
+
+message GetArticleCountRequest {
+}
+
+message GetArticleCountResponse {
+  int32 count = 1;
 }

@@ -96,6 +96,26 @@ func (mr *MockArticleServiceClientMockRecorder) GetArticle(ctx, in interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticle", reflect.TypeOf((*MockArticleServiceClient)(nil).GetArticle), varargs...)
 }
 
+// GetArticleCount mocks base method.
+func (m *MockArticleServiceClient) GetArticleCount(ctx context.Context, in *proto.GetArticleCountRequest, opts ...grpc.CallOption) (*proto.GetArticleCountResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetArticleCount", varargs...)
+	ret0, _ := ret[0].(*proto.GetArticleCountResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetArticleCount indicates an expected call of GetArticleCount.
+func (mr *MockArticleServiceClientMockRecorder) GetArticleCount(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticleCount", reflect.TypeOf((*MockArticleServiceClient)(nil).GetArticleCount), varargs...)
+}
+
 // ListArticles mocks base method.
 func (m *MockArticleServiceClient) ListArticles(ctx context.Context, in *proto.ListArticlesRequest, opts ...grpc.CallOption) (*proto.ListArticlesResponse, error) {
 	m.ctrl.T.Helper()
@@ -202,6 +222,21 @@ func (m *MockArticleServiceServer) GetArticle(arg0 context.Context, arg1 *proto.
 func (mr *MockArticleServiceServerMockRecorder) GetArticle(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticle", reflect.TypeOf((*MockArticleServiceServer)(nil).GetArticle), arg0, arg1)
+}
+
+// GetArticleCount mocks base method.
+func (m *MockArticleServiceServer) GetArticleCount(arg0 context.Context, arg1 *proto.GetArticleCountRequest) (*proto.GetArticleCountResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetArticleCount", arg0, arg1)
+	ret0, _ := ret[0].(*proto.GetArticleCountResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetArticleCount indicates an expected call of GetArticleCount.
+func (mr *MockArticleServiceServerMockRecorder) GetArticleCount(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticleCount", reflect.TypeOf((*MockArticleServiceServer)(nil).GetArticleCount), arg0, arg1)
 }
 
 // ListArticles mocks base method.

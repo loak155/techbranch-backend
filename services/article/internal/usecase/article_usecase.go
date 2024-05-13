@@ -15,6 +15,7 @@ type IArticleUsecase interface {
 	ListArticles(ctx context.Context, offset, limit int) ([]domain.Article, error)
 	UpdateArticle(ctx context.Context, article domain.Article) (bool, error)
 	DeleteArticle(ctx context.Context, id int) (bool, error)
+	GetArticleCount(ctx context.Context) (int, error)
 }
 
 type articleUsecase struct {
@@ -66,4 +67,12 @@ func (usecase *articleUsecase) DeleteArticle(ctx context.Context, id int) (bool,
 		return false, status.Errorf(codes.Internal, "failed to delete article: %v", err)
 	}
 	return true, nil
+}
+
+func (usecase *articleUsecase) GetArticleCount(ctx context.Context) (int, error) {
+	count, err := usecase.repo.GetArticleCount()
+	if err != nil {
+		return 0, status.Errorf(codes.Internal, "failed to get article count: %v", err)
+	}
+	return count, nil
 }

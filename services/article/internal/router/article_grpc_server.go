@@ -22,6 +22,7 @@ type IArticleGRPCServer interface {
 	ListArticles(ctx context.Context, req *pb.ListArticlesRequest) (*pb.ListArticlesResponse, error)
 	UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) (*pb.UpdateArticleResponse, error)
 	DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) (*pb.DeleteArticleResponse, error)
+	GetArticleCount(ctx context.Context, req *pb.GetArticleCountRequest) (*pb.GetArticleCountResponse, error)
 }
 
 type articleGRPCServer struct {
@@ -126,6 +127,14 @@ func (server *articleGRPCServer) DeleteArticle(ctx context.Context, req *pb.Dele
 	res := pb.DeleteArticleResponse{}
 	articleRes, err := server.usecase.DeleteArticle(ctx, int(req.Id))
 	res.Success = articleRes
+
+	return &res, err
+}
+
+func (server *articleGRPCServer) GetArticleCount(ctx context.Context, req *pb.GetArticleCountRequest) (*pb.GetArticleCountResponse, error) {
+	res := pb.GetArticleCountResponse{}
+	count, err := server.usecase.GetArticleCount(ctx)
+	res.Count = int32(count)
 
 	return &res, err
 }
