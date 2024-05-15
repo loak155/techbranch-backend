@@ -39,6 +39,7 @@ bookmark/wire:
 .PHONY: bookmark/mock
 bookmark/mock:
 	mockgen -source=./internal/repository/bookmark_repository.go -destination=./mock/mock_bookmark_repository.go -package=mock
+	mockgen -source=./proto/bookmark_grpc.pb.go -destination=./mock/mock_bookmark_grpc.pb.go -package=mock
 
 .PHONY: bookmark/test
 bookmark/test:
