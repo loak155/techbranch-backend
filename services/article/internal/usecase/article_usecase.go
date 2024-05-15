@@ -5,6 +5,7 @@ import (
 
 	"github.com/loak155/techbranch-backend/services/article/internal/domain"
 	"github.com/loak155/techbranch-backend/services/article/internal/repository"
+	pb "github.com/loak155/techbranch-backend/services/bookmark/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -16,14 +17,16 @@ type IArticleUsecase interface {
 	UpdateArticle(ctx context.Context, article domain.Article) (bool, error)
 	DeleteArticle(ctx context.Context, id int) (bool, error)
 	GetArticleCount(ctx context.Context) (int, error)
+	GetBookmarkedArticle(ctx context.Context, userId int) ([]domain.Article, error)
 }
 
 type articleUsecase struct {
-	repo repository.IArticleRepository
+	repo           repository.IArticleRepository
+	bookmarkClient pb.BookmarkServiceClient
 }
 
-func NewArticleUsecase(repo repository.IArticleRepository) IArticleUsecase {
-	return &articleUsecase{repo}
+func NewArticleUsecase(repo repository.IArticleRepository, bookmarkClient pb.BookmarkServiceClient) IArticleUsecase {
+	return &articleUsecase{repo, bookmarkClient}
 }
 
 func (usecase *articleUsecase) CreateArticle(ctx context.Context, article domain.Article) (domain.Article, error) {
@@ -75,4 +78,22 @@ func (usecase *articleUsecase) GetArticleCount(ctx context.Context) (int, error)
 		return 0, status.Errorf(codes.Internal, "failed to get article count: %v", err)
 	}
 	return count, nil
+}
+
+func (usecase *articleUsecase) GetBookmarkedArticle(ctx context.Context, userId int) ([]domain.Article, error) {
+	bookmarks, err := usecase.bookmarkClient.ListBookmarksByUserID(ctx, &pb.ListBookmarksByUserIDRequest{UserId: int32(userId)})
+	if err != nil {
+		return []domain.Article{}, status.Errorf(codes.Internal, "failed to get bookmarked article: %v", err)
+	}
+
+	articleIds := make([]int, 0)
+	for _, bookmark := range bookmarks.Bookmarks {
+		articleIds = append(articleIds, int(bookmark.ArticleId))
+	}
+
+	articles, err := usecase.repo.GetArticleByIDs(articleIds)
+	if err != nil {
+		return []domain.Article{}, status.Errorf(codes.Internal, "failed to get bookmarked article: %v", err)
+	}
+	return *articles, nil
 }

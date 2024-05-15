@@ -116,6 +116,26 @@ func (mr *MockArticleServiceClientMockRecorder) GetArticleCount(ctx, in interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticleCount", reflect.TypeOf((*MockArticleServiceClient)(nil).GetArticleCount), varargs...)
 }
 
+// GetBookmarkedArticle mocks base method.
+func (m *MockArticleServiceClient) GetBookmarkedArticle(ctx context.Context, in *proto.GetBookmarkedArticleRequest, opts ...grpc.CallOption) (*proto.GetBookmarkedArticleResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetBookmarkedArticle", varargs...)
+	ret0, _ := ret[0].(*proto.GetBookmarkedArticleResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookmarkedArticle indicates an expected call of GetBookmarkedArticle.
+func (mr *MockArticleServiceClientMockRecorder) GetBookmarkedArticle(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookmarkedArticle", reflect.TypeOf((*MockArticleServiceClient)(nil).GetBookmarkedArticle), varargs...)
+}
+
 // ListArticles mocks base method.
 func (m *MockArticleServiceClient) ListArticles(ctx context.Context, in *proto.ListArticlesRequest, opts ...grpc.CallOption) (*proto.ListArticlesResponse, error) {
 	m.ctrl.T.Helper()
@@ -237,6 +257,21 @@ func (m *MockArticleServiceServer) GetArticleCount(arg0 context.Context, arg1 *p
 func (mr *MockArticleServiceServerMockRecorder) GetArticleCount(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticleCount", reflect.TypeOf((*MockArticleServiceServer)(nil).GetArticleCount), arg0, arg1)
+}
+
+// GetBookmarkedArticle mocks base method.
+func (m *MockArticleServiceServer) GetBookmarkedArticle(arg0 context.Context, arg1 *proto.GetBookmarkedArticleRequest) (*proto.GetBookmarkedArticleResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookmarkedArticle", arg0, arg1)
+	ret0, _ := ret[0].(*proto.GetBookmarkedArticleResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookmarkedArticle indicates an expected call of GetBookmarkedArticle.
+func (mr *MockArticleServiceServerMockRecorder) GetBookmarkedArticle(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookmarkedArticle", reflect.TypeOf((*MockArticleServiceServer)(nil).GetBookmarkedArticle), arg0, arg1)
 }
 
 // ListArticles mocks base method.

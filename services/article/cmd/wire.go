@@ -11,6 +11,7 @@ import (
 	"github.com/loak155/techbranch-backend/services/article/internal/router"
 	"github.com/loak155/techbranch-backend/services/article/internal/usecase"
 	pb "github.com/loak155/techbranch-backend/services/article/proto"
+	"github.com/loak155/techbranch-backend/services/bookmark/client"
 	"google.golang.org/grpc"
 )
 
@@ -18,6 +19,7 @@ func InitServer(conf *config.Config, grpcServer *grpc.Server) (pb.ArticleService
 	panic(wire.Build(
 		db.NewArticleDB,
 		repository.NewArticleRepository,
+		client.NewBookmarkGRPCClient,
 		usecase.NewArticleUsecase,
 		router.NewArticleGRPCServer,
 	))

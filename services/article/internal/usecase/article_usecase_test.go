@@ -8,6 +8,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/loak155/techbranch-backend/services/article/internal/domain"
 	"github.com/loak155/techbranch-backend/services/article/mock"
+	bookmarkMock "github.com/loak155/techbranch-backend/services/bookmark/mock"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
@@ -56,8 +57,9 @@ func TestCreateArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := NewArticleUsecase(repo)
+			usecase := NewArticleUsecase(repo, mockArticleClient)
 			resUser, err := usecase.CreateArticle(tc.args.ctx, tc.args.article)
 			tc.checkResponse(t, resUser, err)
 		})
@@ -126,8 +128,9 @@ func TestGetArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := NewArticleUsecase(repo)
+			usecase := NewArticleUsecase(repo, mockArticleClient)
 			resArticle, err := usecase.GetArticle(tc.args.ctx, tc.args.id)
 			tc.checkResponse(t, resArticle, err)
 		})
@@ -197,8 +200,9 @@ func TestListArticles(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := NewArticleUsecase(repo)
+			usecase := NewArticleUsecase(repo, mockArticleClient)
 			resArticles, err := usecase.ListArticles(tc.args.ctx, tc.args.offset, tc.args.limit)
 			tc.checkResponse(t, resArticles, err)
 		})
@@ -260,8 +264,9 @@ func TestUpdateArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := NewArticleUsecase(repo)
+			usecase := NewArticleUsecase(repo, mockArticleClient)
 			res, err := usecase.UpdateArticle(tc.args.ctx, tc.args.article)
 			tc.checkResponse(t, res, err)
 		})
@@ -317,8 +322,9 @@ func TestDeleteArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := NewArticleUsecase(repo)
+			usecase := NewArticleUsecase(repo, mockArticleClient)
 			resArticle, err := usecase.DeleteArticle(tc.args.ctx, tc.args.id)
 			tc.checkResponse(t, resArticle, err)
 		})

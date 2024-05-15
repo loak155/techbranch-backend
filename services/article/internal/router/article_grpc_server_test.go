@@ -10,6 +10,7 @@ import (
 	"github.com/loak155/techbranch-backend/services/article/internal/usecase"
 	"github.com/loak155/techbranch-backend/services/article/mock"
 	pb "github.com/loak155/techbranch-backend/services/article/proto"
+	bookmarkMock "github.com/loak155/techbranch-backend/services/bookmark/mock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
@@ -71,8 +72,9 @@ func TestCreateArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := usecase.NewArticleUsecase(repo)
+			usecase := usecase.NewArticleUsecase(repo, mockArticleClient)
 			server := grpc.NewServer()
 			server.GracefulStop()
 
@@ -147,8 +149,9 @@ func TestGetArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := usecase.NewArticleUsecase(repo)
+			usecase := usecase.NewArticleUsecase(repo, mockArticleClient)
 			server := grpc.NewServer()
 			server.GracefulStop()
 
@@ -226,8 +229,9 @@ func TestListArticles(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := usecase.NewArticleUsecase(repo)
+			usecase := usecase.NewArticleUsecase(repo, mockArticleClient)
 			server := grpc.NewServer()
 			server.GracefulStop()
 
@@ -295,8 +299,9 @@ func TestUpdateArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := usecase.NewArticleUsecase(repo)
+			usecase := usecase.NewArticleUsecase(repo, mockArticleClient)
 			server := grpc.NewServer()
 			server.GracefulStop()
 
@@ -360,8 +365,9 @@ func TestDeleteArticle(t *testing.T) {
 
 			repo := mock.NewMockIArticleRepository(mockCtrl)
 			tc.buildStubs(repo)
+			mockArticleClient := bookmarkMock.NewMockBookmarkServiceClient(mockCtrl)
 
-			usecase := usecase.NewArticleUsecase(repo)
+			usecase := usecase.NewArticleUsecase(repo, mockArticleClient)
 			server := grpc.NewServer()
 			server.GracefulStop()
 

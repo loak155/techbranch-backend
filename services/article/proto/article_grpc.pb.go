@@ -19,12 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ArticleService_CreateArticle_FullMethodName   = "/techbranch.article.ArticleService/CreateArticle"
-	ArticleService_GetArticle_FullMethodName      = "/techbranch.article.ArticleService/GetArticle"
-	ArticleService_ListArticles_FullMethodName    = "/techbranch.article.ArticleService/ListArticles"
-	ArticleService_UpdateArticle_FullMethodName   = "/techbranch.article.ArticleService/UpdateArticle"
-	ArticleService_DeleteArticle_FullMethodName   = "/techbranch.article.ArticleService/DeleteArticle"
-	ArticleService_GetArticleCount_FullMethodName = "/techbranch.article.ArticleService/GetArticleCount"
+	ArticleService_CreateArticle_FullMethodName        = "/techbranch.article.ArticleService/CreateArticle"
+	ArticleService_GetArticle_FullMethodName           = "/techbranch.article.ArticleService/GetArticle"
+	ArticleService_ListArticles_FullMethodName         = "/techbranch.article.ArticleService/ListArticles"
+	ArticleService_UpdateArticle_FullMethodName        = "/techbranch.article.ArticleService/UpdateArticle"
+	ArticleService_DeleteArticle_FullMethodName        = "/techbranch.article.ArticleService/DeleteArticle"
+	ArticleService_GetArticleCount_FullMethodName      = "/techbranch.article.ArticleService/GetArticleCount"
+	ArticleService_GetBookmarkedArticle_FullMethodName = "/techbranch.article.ArticleService/GetBookmarkedArticle"
 )
 
 // ArticleServiceClient is the client API for ArticleService service.
@@ -37,6 +38,7 @@ type ArticleServiceClient interface {
 	UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error)
 	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*DeleteArticleResponse, error)
 	GetArticleCount(ctx context.Context, in *GetArticleCountRequest, opts ...grpc.CallOption) (*GetArticleCountResponse, error)
+	GetBookmarkedArticle(ctx context.Context, in *GetBookmarkedArticleRequest, opts ...grpc.CallOption) (*GetBookmarkedArticleResponse, error)
 }
 
 type articleServiceClient struct {
@@ -101,6 +103,15 @@ func (c *articleServiceClient) GetArticleCount(ctx context.Context, in *GetArtic
 	return out, nil
 }
 
+func (c *articleServiceClient) GetBookmarkedArticle(ctx context.Context, in *GetBookmarkedArticleRequest, opts ...grpc.CallOption) (*GetBookmarkedArticleResponse, error) {
+	out := new(GetBookmarkedArticleResponse)
+	err := c.cc.Invoke(ctx, ArticleService_GetBookmarkedArticle_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleServiceServer is the server API for ArticleService service.
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility
@@ -111,6 +122,7 @@ type ArticleServiceServer interface {
 	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleResponse, error)
 	DeleteArticle(context.Context, *DeleteArticleRequest) (*DeleteArticleResponse, error)
 	GetArticleCount(context.Context, *GetArticleCountRequest) (*GetArticleCountResponse, error)
+	GetBookmarkedArticle(context.Context, *GetBookmarkedArticleRequest) (*GetBookmarkedArticleResponse, error)
 	mustEmbedUnimplementedArticleServiceServer()
 }
 
@@ -135,6 +147,9 @@ func (UnimplementedArticleServiceServer) DeleteArticle(context.Context, *DeleteA
 }
 func (UnimplementedArticleServiceServer) GetArticleCount(context.Context, *GetArticleCountRequest) (*GetArticleCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArticleCount not implemented")
+}
+func (UnimplementedArticleServiceServer) GetBookmarkedArticle(context.Context, *GetBookmarkedArticleRequest) (*GetBookmarkedArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBookmarkedArticle not implemented")
 }
 func (UnimplementedArticleServiceServer) mustEmbedUnimplementedArticleServiceServer() {}
 
@@ -257,6 +272,24 @@ func _ArticleService_GetArticleCount_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleService_GetBookmarkedArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBookmarkedArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).GetBookmarkedArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleService_GetBookmarkedArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).GetBookmarkedArticle(ctx, req.(*GetBookmarkedArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleService_ServiceDesc is the grpc.ServiceDesc for ArticleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +320,10 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetArticleCount",
 			Handler:    _ArticleService_GetArticleCount_Handler,
+		},
+		{
+			MethodName: "GetBookmarkedArticle",
+			Handler:    _ArticleService_GetBookmarkedArticle_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

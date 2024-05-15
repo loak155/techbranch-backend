@@ -12,6 +12,7 @@ type IArticleRepository interface {
 	UpdateArticle(article *domain.Article) error
 	DeleteArticle(id int) error
 	GetArticleCount() (int, error)
+	GetArticleByIDs(ids []int) (*[]domain.Article, error)
 }
 
 type articleRepository struct {
@@ -53,4 +54,10 @@ func (repo *articleRepository) GetArticleCount() (int, error) {
 	var count int64
 	err := repo.db.Model(&domain.Article{}).Count(&count).Error
 	return int(count), err
+}
+
+func (repo *articleRepository) GetArticleByIDs(ids []int) (*[]domain.Article, error) {
+	articles := &[]domain.Article{}
+	err := repo.db.Where("id IN (?)", ids).Find(articles).Error
+	return articles, err
 }

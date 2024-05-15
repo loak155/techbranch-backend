@@ -41,6 +41,11 @@ service ArticleService {
       get: "/api/v1/articles/count"
     };
   }
+  rpc GetBookmarkedArticle(GetBookmarkedArticleRequest) returns (GetBookmarkedArticleResponse){
+  option (google.api.http) = {
+      get: "/api/v1/bookmarks/{user_id}/articles"
+    };
+  }
 }
 
 message Article {
@@ -100,4 +105,12 @@ message GetArticleCountRequest {
 
 message GetArticleCountResponse {
   int32 count = 1;
+}
+
+message GetBookmarkedArticleRequest {
+  int32 user_id = 1;
+}
+
+message GetBookmarkedArticleResponse {
+  repeated Article articles = 1;
 }

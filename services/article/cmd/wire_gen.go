@@ -13,6 +13,7 @@ import (
 	"github.com/loak155/techbranch-backend/services/article/internal/router"
 	"github.com/loak155/techbranch-backend/services/article/internal/usecase"
 	"github.com/loak155/techbranch-backend/services/article/proto"
+	"github.com/loak155/techbranch-backend/services/bookmark/client"
 	"google.golang.org/grpc"
 )
 
@@ -21,7 +22,11 @@ import (
 func InitServer(conf *config.Config, grpcServer *grpc.Server) (proto.ArticleServiceServer, error) {
 	gormDB := db.NewArticleDB(conf)
 	iArticleRepository := repository.NewArticleRepository(gormDB)
-	iArticleUsecase := usecase.NewArticleUsecase(iArticleRepository)
+	bookmarkServiceClient, err := client.NewBookmarkGRPCClient(conf)
+	if err != nil {
+		return nil, err
+	}
+	iArticleUsecase := usecase.NewArticleUsecase(iArticleRepository, bookmarkServiceClient)
 	articleServiceServer := router.NewArticleGRPCServer(grpcServer, iArticleUsecase)
 	return articleServiceServer, nil
 }
