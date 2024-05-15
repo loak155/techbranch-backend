@@ -23,7 +23,7 @@ type IArticleGRPCServer interface {
 	UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) (*pb.UpdateArticleResponse, error)
 	DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) (*pb.DeleteArticleResponse, error)
 	GetArticleCount(ctx context.Context, req *pb.GetArticleCountRequest) (*pb.GetArticleCountResponse, error)
-	GetBookmarkArticle(ctx context.Context, req *pb.GetArticleCountRequest) (*pb.GetArticleCountResponse, error)
+	GetBookmarkedArticle(ctx context.Context, req *pb.GetBookmarkedArticleRequest) (*pb.GetBookmarkedArticleResponse, error)
 }
 
 type articleGRPCServer struct {
@@ -140,7 +140,7 @@ func (server *articleGRPCServer) GetArticleCount(ctx context.Context, req *pb.Ge
 	return &res, err
 }
 
-func (server *articleGRPCServer) GetBookmarkArticle(ctx context.Context, req *pb.GetBookmarkedArticleRequest) (*pb.GetBookmarkedArticleResponse, error) {
+func (server *articleGRPCServer) GetBookmarkedArticle(ctx context.Context, req *pb.GetBookmarkedArticleRequest) (*pb.GetBookmarkedArticleResponse, error) {
 	res := pb.GetBookmarkedArticleResponse{}
 	articles, err := server.usecase.GetBookmarkedArticle(ctx, int(req.UserId))
 	if err != nil {
