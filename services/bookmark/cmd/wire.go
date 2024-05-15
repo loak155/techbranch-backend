@@ -8,7 +8,6 @@ import (
 	"github.com/loak155/techbranch-backend/pkg/config"
 	"github.com/loak155/techbranch-backend/pkg/db"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
-	"github.com/loak155/techbranch-backend/services/article/client"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/repository"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/router"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/usecase"
@@ -20,7 +19,6 @@ func InitServer(conf *config.Config, grpcServer *grpc.Server) (pb.BookmarkServic
 	panic(wire.Build(
 		db.NewBookmarkDB,
 		repository.NewBookmarkRepository,
-		client.NewArticleGRPCClient,
 		usecase.NewBookmarkUsecase,
 		jwt.NewJwtManager,
 		router.NewBookmarkGRPCServer,

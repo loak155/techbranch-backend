@@ -10,7 +10,6 @@ import (
 	"github.com/loak155/techbranch-backend/pkg/config"
 	"github.com/loak155/techbranch-backend/pkg/db"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
-	"github.com/loak155/techbranch-backend/services/article/client"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/repository"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/router"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/usecase"
@@ -23,11 +22,7 @@ import (
 func InitServer(conf *config.Config, grpcServer *grpc.Server) (proto.BookmarkServiceServer, error) {
 	gormDB := db.NewBookmarkDB(conf)
 	iBookmarkRepository := repository.NewBookmarkRepository(gormDB)
-	articleServiceClient, err := client.NewArticleGRPCClient(conf)
-	if err != nil {
-		return nil, err
-	}
-	iBookmarkUsecase := usecase.NewBookmarkUsecase(iBookmarkRepository, articleServiceClient)
+	iBookmarkUsecase := usecase.NewBookmarkUsecase(iBookmarkRepository)
 	jwtManager := jwt.NewJwtManager(conf)
 	bookmarkServiceServer := router.NewBookmarkGRPCServer(grpcServer, iBookmarkUsecase, jwtManager)
 	return bookmarkServiceServer, nil

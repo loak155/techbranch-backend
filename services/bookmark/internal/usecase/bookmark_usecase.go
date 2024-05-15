@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 
-	pb "github.com/loak155/techbranch-backend/services/article/proto"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/domain"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/repository"
 	"google.golang.org/grpc/codes"
@@ -25,12 +24,11 @@ type IBookmarkUsecase interface {
 }
 
 type bookmarkUsecase struct {
-	repo          repository.IBookmarkRepository
-	articleClient pb.ArticleServiceClient
+	repo repository.IBookmarkRepository
 }
 
-func NewBookmarkUsecase(repo repository.IBookmarkRepository, articleClient pb.ArticleServiceClient) IBookmarkUsecase {
-	return &bookmarkUsecase{repo, articleClient}
+func NewBookmarkUsecase(repo repository.IBookmarkRepository) IBookmarkUsecase {
+	return &bookmarkUsecase{repo}
 }
 
 func (usecase *bookmarkUsecase) CreateBookmark(ctx context.Context, bookmark domain.Bookmark) (domain.Bookmark, error) {

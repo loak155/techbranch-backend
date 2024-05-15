@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	articlemock "github.com/loak155/techbranch-backend/services/article/mock"
 	"github.com/loak155/techbranch-backend/services/bookmark/internal/domain"
 	"github.com/loak155/techbranch-backend/services/bookmark/mock"
 	"github.com/stretchr/testify/assert"
@@ -33,7 +32,7 @@ func TestCreateBookmark(t *testing.T) {
 	testCases := []struct {
 		name          string
 		args          args
-		buildStubs    func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient)
+		buildStubs    func(repo *mock.MockIBookmarkRepository)
 		checkResponse func(t *testing.T, resBookmark domain.Bookmark, err error)
 	}{
 		{
@@ -42,7 +41,7 @@ func TestCreateBookmark(t *testing.T) {
 				ctx:      context.Background(),
 				bookmark: reqBookmark,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().GetBookmarkByUserIDAndArticleIDWithUnscoped(gomock.Any(), gomock.Any()).Return(repoResBookmark, nil)
 				repo.EXPECT().UpdateBookmarkWithUnscoped(gomock.Any()).Return(nil)
 			},
@@ -61,7 +60,7 @@ func TestCreateBookmark(t *testing.T) {
 				ctx:      context.Background(),
 				bookmark: reqBookmark,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().GetBookmarkByUserIDAndArticleIDWithUnscoped(gomock.Any(), gomock.Any()).Return(&domain.Bookmark{}, nil)
 				repo.EXPECT().CreateBookmark(gomock.Any()).Return(nil)
 			},
@@ -80,7 +79,7 @@ func TestCreateBookmark(t *testing.T) {
 				ctx:      context.Background(),
 				bookmark: reqBookmark,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().GetBookmarkByUserIDAndArticleIDWithUnscoped(gomock.Any(), gomock.Any()).Return(repoResBookmark, nil)
 				repo.EXPECT().UpdateBookmarkWithUnscoped(gomock.Any()).Return(gorm.ErrInvalidData)
 			},
@@ -95,7 +94,7 @@ func TestCreateBookmark(t *testing.T) {
 				ctx:      context.Background(),
 				bookmark: reqBookmark,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().GetBookmarkByUserIDAndArticleIDWithUnscoped(gomock.Any(), gomock.Any()).Return(&domain.Bookmark{}, nil)
 				repo.EXPECT().CreateBookmark(gomock.Any()).Return(gorm.ErrInvalidData)
 			},
@@ -112,10 +111,9 @@ func TestCreateBookmark(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
-			tc.buildStubs(repo, mockArticleClient)
+			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.CreateBookmark(tc.args.ctx, tc.args.bookmark)
 			tc.checkResponse(t, resBookmark, err)
 		})
@@ -183,10 +181,9 @@ func TestGetBookmark(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
 			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.GetBookmark(tc.args.ctx, tc.args.id)
 			tc.checkResponse(t, resBookmark, err)
 		})
@@ -266,10 +263,9 @@ func TestListBookmarks(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
 			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmarks, err := usecase.ListBookmarks(tc.args.ctx)
 			tc.checkResponse(t, resBookmarks, err)
 		})
@@ -351,10 +347,9 @@ func TestListBookmarksByUserID(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
 			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmarks, err := usecase.ListBookmarksByUserID(tc.args.ctx, 1)
 			tc.checkResponse(t, resBookmarks, err)
 		})
@@ -423,10 +418,9 @@ func TestListBookmarksByArticleID(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
 			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmarks, err := usecase.ListBookmarksByArticleID(tc.args.ctx, 1)
 			tc.checkResponse(t, resBookmarks, err)
 		})
@@ -448,7 +442,7 @@ func TestDeleteBookmark(t *testing.T) {
 	testCases := []struct {
 		name          string
 		args          args
-		buildStubs    func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient)
+		buildStubs    func(repo *mock.MockIBookmarkRepository)
 		checkResponse func(t *testing.T, res bool, err error)
 	}{
 		{
@@ -457,7 +451,7 @@ func TestDeleteBookmark(t *testing.T) {
 				ctx:      context.Background(),
 				bookmark: reqBookmark,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().DeleteBookmarkByUserIDAndArticleID(gomock.Any(), gomock.Any()).Return(nil)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -471,7 +465,7 @@ func TestDeleteBookmark(t *testing.T) {
 				ctx:      context.Background(),
 				bookmark: reqBookmark,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().DeleteBookmarkByUserIDAndArticleID(gomock.Any(), gomock.Any()).Return(gorm.ErrInvalidData)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -487,10 +481,9 @@ func TestDeleteBookmark(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
-			tc.buildStubs(repo, mockArticleClient)
+			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.DeleteBookmark(tc.args.ctx, tc.args.bookmark)
 			tc.checkResponse(t, resBookmark, err)
 		})
@@ -506,7 +499,7 @@ func TestDeleteBookmarkByUserID(t *testing.T) {
 	testCases := []struct {
 		name          string
 		args          args
-		buildStubs    func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient)
+		buildStubs    func(repo *mock.MockIBookmarkRepository)
 		checkResponse func(t *testing.T, res bool, err error)
 	}{
 		{
@@ -515,7 +508,7 @@ func TestDeleteBookmarkByUserID(t *testing.T) {
 				ctx:    context.Background(),
 				userID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().DeleteBookmarkByUserID(gomock.Any()).Return(nil)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -529,7 +522,7 @@ func TestDeleteBookmarkByUserID(t *testing.T) {
 				ctx:    context.Background(),
 				userID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().DeleteBookmarkByUserID(gomock.Any()).Return(gorm.ErrInvalidData)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -545,10 +538,9 @@ func TestDeleteBookmarkByUserID(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
-			tc.buildStubs(repo, mockArticleClient)
+			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.DeleteBookmarkByUserID(tc.args.ctx, tc.args.userID)
 			tc.checkResponse(t, resBookmark, err)
 		})
@@ -564,7 +556,7 @@ func TestDeleteBookmarkByUserIDCompensate(t *testing.T) {
 	testCases := []struct {
 		name          string
 		args          args
-		buildStubs    func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient)
+		buildStubs    func(repo *mock.MockIBookmarkRepository)
 		checkResponse func(t *testing.T, res bool, err error)
 	}{
 		{
@@ -573,7 +565,7 @@ func TestDeleteBookmarkByUserIDCompensate(t *testing.T) {
 				ctx:    context.Background(),
 				userID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().UpdateBookmarkByUserIDWithUnscoped(gomock.Any()).Return(nil)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -587,7 +579,7 @@ func TestDeleteBookmarkByUserIDCompensate(t *testing.T) {
 				ctx:    context.Background(),
 				userID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().UpdateBookmarkByUserIDWithUnscoped(gomock.Any()).Return(gorm.ErrInvalidData)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -603,10 +595,9 @@ func TestDeleteBookmarkByUserIDCompensate(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
-			tc.buildStubs(repo, mockArticleClient)
+			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.DeleteBookmarkByUserIDCompensate(tc.args.ctx, tc.args.userID)
 			tc.checkResponse(t, resBookmark, err)
 		})
@@ -622,7 +613,7 @@ func TestDeleteBookmarkByArticleID(t *testing.T) {
 	testCases := []struct {
 		name          string
 		args          args
-		buildStubs    func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient)
+		buildStubs    func(repo *mock.MockIBookmarkRepository)
 		checkResponse func(t *testing.T, res bool, err error)
 	}{
 		{
@@ -631,7 +622,7 @@ func TestDeleteBookmarkByArticleID(t *testing.T) {
 				ctx:       context.Background(),
 				articleID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().DeleteBookmarkByArticleID(gomock.Any()).Return(nil)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -645,7 +636,7 @@ func TestDeleteBookmarkByArticleID(t *testing.T) {
 				ctx:       context.Background(),
 				articleID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().DeleteBookmarkByArticleID(gomock.Any()).Return(gorm.ErrInvalidData)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -661,10 +652,9 @@ func TestDeleteBookmarkByArticleID(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
-			tc.buildStubs(repo, mockArticleClient)
+			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.DeleteBookmarkByArticleID(tc.args.ctx, tc.args.articleID)
 			tc.checkResponse(t, resBookmark, err)
 		})
@@ -680,7 +670,7 @@ func TestDeleteBookmarkByArticleIDCompensate(t *testing.T) {
 	testCases := []struct {
 		name          string
 		args          args
-		buildStubs    func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient)
+		buildStubs    func(repo *mock.MockIBookmarkRepository)
 		checkResponse func(t *testing.T, res bool, err error)
 	}{
 		{
@@ -689,7 +679,7 @@ func TestDeleteBookmarkByArticleIDCompensate(t *testing.T) {
 				ctx:       context.Background(),
 				articleID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().UpdateBookmarkByArticleIDWithUnscoped(gomock.Any()).Return(nil)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -703,7 +693,7 @@ func TestDeleteBookmarkByArticleIDCompensate(t *testing.T) {
 				ctx:       context.Background(),
 				articleID: 1,
 			},
-			buildStubs: func(repo *mock.MockIBookmarkRepository, mockArticleClient *articlemock.MockArticleServiceClient) {
+			buildStubs: func(repo *mock.MockIBookmarkRepository) {
 				repo.EXPECT().UpdateBookmarkByArticleIDWithUnscoped(gomock.Any()).Return(gorm.ErrInvalidData)
 			},
 			checkResponse: func(t *testing.T, res bool, err error) {
@@ -719,10 +709,9 @@ func TestDeleteBookmarkByArticleIDCompensate(t *testing.T) {
 			defer mockCtrl.Finish()
 
 			repo := mock.NewMockIBookmarkRepository(mockCtrl)
-			mockArticleClient := articlemock.NewMockArticleServiceClient(mockCtrl)
-			tc.buildStubs(repo, mockArticleClient)
+			tc.buildStubs(repo)
 
-			usecase := NewBookmarkUsecase(repo, mockArticleClient)
+			usecase := NewBookmarkUsecase(repo)
 			resBookmark, err := usecase.DeleteBookmarkByArticleIDCompensate(tc.args.ctx, tc.args.articleID)
 			tc.checkResponse(t, resBookmark, err)
 		})
