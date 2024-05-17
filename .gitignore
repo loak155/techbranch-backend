@@ -51,4 +51,4 @@ vendor/
 go.work
 go.work.sum
 
-config.yaml
+.env

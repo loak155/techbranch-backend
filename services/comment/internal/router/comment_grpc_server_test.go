@@ -74,7 +74,7 @@ func TestCreateComment(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -156,7 +156,7 @@ func TestGetComment(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -251,7 +251,7 @@ func TestListCommentsByArticleID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -351,7 +351,7 @@ func TestUpdateComment(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -420,7 +420,7 @@ func TestDeleteComment(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -489,7 +489,7 @@ func TestDeleteCommentByUserID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -558,7 +558,7 @@ func TestDeleteCommentByUserIDCompensate(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -627,7 +627,7 @@ func TestDeleteCommentByArticleID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -696,7 +696,7 @@ func TestDeleteCommentByArticleIDCompensate(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)

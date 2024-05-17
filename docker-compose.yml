@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: ./build/docker/gateway/Dockerfile
     image: techbranch/gateway
+    env_file:
+      - services/gateway/cmd/.env
     ports:
       - 8080:8080
     networks:
@@ -16,6 +18,8 @@ services:
       context: .
       dockerfile: ./services/user/Dockerfile
     image: techbranch/user
+    env_file:
+      - services/user/cmd/.env
     ports:
       - 8081:8081
     depends_on:
@@ -43,6 +47,8 @@ services:
       context: .
       dockerfile: ./services/auth/auth/Dockerfile
     image: techbranch/auth
+    env_file:
+      - services/auth/cmd/.env
     ports:
       - 8082:8082
     depends_on:
@@ -55,6 +61,8 @@ services:
       context: .
       dockerfile: ./build/docker/article/Dockerfile
     image: techbranch/article
+    env_file:
+      - services/article/cmd/.env
     ports:
       - 8083:8083
     depends_on:
@@ -82,6 +90,8 @@ services:
       context: .
       dockerfile: ./build/docker/bookmark/Dockerfile
     image: techbranch/bookmark
+    env_file:
+      - services/bookmark/cmd/.env
     ports:
       - 8084:8084
     depends_on:
@@ -109,6 +119,8 @@ services:
       context: .
       dockerfile: ./build/docker/comment/Dockerfile
     image: techbranch/comment
+    env_file:
+      - services/comment/cmd/.env
     ports:
       - 8085:8085
     depends_on:

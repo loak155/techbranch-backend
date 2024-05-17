@@ -12,6 +12,7 @@ import (
 	"syscall"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/joho/godotenv"
 	"golang.org/x/exp/slog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -82,8 +83,13 @@ func newGateway(ctx context.Context, conf *config.Config) (http.Handler, error) 
 func main() {
 	slog.Info("starting gateway")
 
-	flag.Parse()
-	conf, err := config.Load(*flagConfig)
+	if os.Getenv("ENV") == "local" {
+		if err := godotenv.Load(); err != nil {
+			slog.Error("failed to load .env file: ", err)
+		}
+	}
+
+	conf, err := config.Load()
 	if err != nil {
 		slog.Error("failed to load config: ", err)
 	}

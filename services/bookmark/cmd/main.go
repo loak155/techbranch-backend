@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log/slog"
 	"net"
@@ -11,19 +10,23 @@ import (
 	"syscall"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
+	"github.com/joho/godotenv"
 	"github.com/loak155/techbranch-backend/pkg/config"
 	"github.com/loak155/techbranch-backend/pkg/interceptor"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
 	"google.golang.org/grpc"
 )
 
-var flagConfig = flag.String("config", "./configs/config.yaml", "path to config file")
-
 func main() {
 	slog.Info("starting bookmark service")
 
-	flag.Parse()
-	conf, err := config.Load(*flagConfig)
+	if os.Getenv("ENV") == "local" {
+		if err := godotenv.Load(); err != nil {
+			slog.Error("failed to load .env file: ", err)
+		}
+	}
+
+	conf, err := config.Load()
 	if err != nil {
 		slog.Error("failed to load config: ", err)
 	}

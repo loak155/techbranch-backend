@@ -10,6 +10,5 @@ RUN go build -o main ./services/article/cmd
 # Run stage
 FROM alpine:3.18 AS production
 WORKDIR /app
-COPY services/article/configs/ configs/
 COPY --from=development /app/main .
 CMD [ "/app/main" ]

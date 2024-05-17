@@ -82,7 +82,7 @@ func TestSignup(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -190,7 +190,7 @@ func TestSignin(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)

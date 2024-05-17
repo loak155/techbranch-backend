@@ -58,7 +58,7 @@ func TestCreateBookmark(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -138,7 +138,7 @@ func TestGetBookmark(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -216,7 +216,7 @@ func TestListBookmarks(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -296,7 +296,7 @@ func TestListBookmarksByUserID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -376,7 +376,7 @@ func TestListBookmarksByArticleID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -447,7 +447,7 @@ func TestDeleteBookmark(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -516,7 +516,7 @@ func TestDeleteBookmarkByUserID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -585,7 +585,7 @@ func TestDeleteBookmarkByUserIDCompensate(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -654,7 +654,7 @@ func TestDeleteBookmarkByArticleID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)
@@ -723,7 +723,7 @@ func TestDeleteBookmarkByArticleIDCompensate(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			conf, err := config.Load("../../../configs/config.yaml")
+			conf, err := config.Load()
 			assert.NoError(t, err)
 
 			mockCtrl := gomock.NewController(t)

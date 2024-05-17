@@ -109,8 +109,6 @@ func (server *authGRPCServer) Signin(ctx context.Context, req *authpb.SigninRequ
 
 func (server *authGRPCServer) GetSigninUser(ctx context.Context, req *authpb.GetSigninUserRequest) (*authpb.GetSigninUserResponse, error) {
 	res := authpb.GetSigninUserResponse{}
-	slog.Info("[Message]", "UserID", "確認1")
-	slog.Info("[Message]", "UserID", myContext.GetUserID(ctx))
 	username, email, err := server.usecase.GetSigninUser(ctx, myContext.GetUserID(ctx))
 	if err != nil {
 		return nil, err

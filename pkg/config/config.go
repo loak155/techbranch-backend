@@ -3,90 +3,83 @@ package config
 import (
 	"time"
 
-	"github.com/spf13/viper"
+	"github.com/caarlos0/env/v11"
 )
 
 type Server struct {
-	Name string `json:"name" yaml:"name"`
-	Host string `json:"host" yaml:"host"`
-	Port int    `json:"port" yaml:"port"`
+	Name string `env:"NAME"`
+	Host string `env:"HOST"`
+	Port int    `env:"PORT"`
 }
 
 type DB struct {
-	Host     string `json:"host" yaml:"host"`
-	Port     int    `json:"port" yaml:"port"`
-	User     string `json:"user" yaml:"user"`
-	Password string `json:"password" yaml:"password"`
-	Name     string `json:"name" yaml:"name"`
+	Host     string `env:"HOST"`
+	Port     int    `env:"PORT"`
+	User     string `env:"USER"`
+	Password string `env:"PASSWORD"`
+	Name     string `env:"NAME"`
 }
 
 type Gateway struct {
-	Server Server
+	Server Server `envPrefix:"SERVER_"`
 }
 
 type User struct {
-	Server Server
-	DB     DB
+	Server Server `envPrefix:"SERVER_"`
+	DB     DB     `envPrefix:"DB_"`
 }
 
 type Auth struct {
-	Server Server
+	Server Server `envPrefix:"SERVER_"`
 }
 
 type Article struct {
-	Server Server
-	DB     DB
+	Server Server `envPrefix:"SERVER_"`
+	DB     DB     `envPrefix:"DB_"`
 }
 
 type Bookmark struct {
-	Server Server
-	DB     DB
+	Server Server `envPrefix:"SERVER_"`
+	DB     DB     `envPrefix:"DB_"`
 }
 
 type Comment struct {
-	Server Server
-	DB     DB
+	Server Server `envPrefix:"SERVER_"`
+	DB     DB     `envPrefix:"DB_"`
 }
 
 type JWT struct {
-	Secret  string        `json:"secret" yaml:"secret"`
-	Expires time.Duration `json:"expires" yaml:"expires"`
+	Secret  string        `env:"SECRET"`
+	Expires time.Duration `env:"EXPIRES"`
 }
 
 type Google struct {
-	State        string `json:"state" yaml:"state"`
-	ClientID     string `json:"clientId" yaml:"clientId"`
-	ClientSecret string `json:"clientSecret" yaml:"clientSecret"`
-	RedirectURL  string `json:"redirectUrl" yaml:"redirectUrl"`
+	State        string `env:"STATE"`
+	ClientID     string `env:"CLIENT_ID"`
+	ClientSecret string `env:"CLIENT_SECRET"`
+	RedirectURL  string `env:"REDIRECT_URL"`
 }
 
 type Oauth struct {
-	Google Google
+	Google Google `envPrefix:"GOOGLE_"`
 }
 
 type Config struct {
-	Gateway  Gateway
-	User     User
-	Auth     Auth
-	Article  Article
-	Bookmark Bookmark
-	Comment  Comment
-	JWT      JWT
-	Oauth    Oauth
+	Gateway  Gateway  `envPrefix:"GATEWAY_"`
+	User     User     `envPrefix:"USER_"`
+	Auth     Auth     `envPrefix:"AUTH_"`
+	Article  Article  `envPrefix:"ARTICLE_"`
+	Bookmark Bookmark `envPrefix:"BOOKMARK_"`
+	Comment  Comment  `envPrefix:"COMMENT_"`
+	JWT      JWT      `envPrefix:"JWT_"`
+	Oauth    Oauth    `envPrefix:"OAUTH_"`
 }
 
-func Load(path string) (*Config, error) {
-	viper.SetConfigFile(path)
-	err := viper.ReadInConfig()
-	if err != nil {
-		return nil, err
-	}
+func Load() (*Config, error) {
 	conf := &Config{}
-	err = viper.Unmarshal(conf)
-	if err != nil {
+	if err := env.Parse(conf); err != nil {
 		return nil, err
 	}
-	conf.JWT.Expires = conf.JWT.Expires * time.Second
 
 	return conf, nil
 }
