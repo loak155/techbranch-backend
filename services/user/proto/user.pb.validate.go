@@ -322,16 +322,7 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetPassword()); l < 8 || l > 30 {
-		err := CreateUserRequestValidationError{
-			field:  "Password",
-			reason: "value length must be between 8 and 30 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Password
 
 	if len(errors) > 0 {
 		return CreateUserRequestMultiError(errors)
