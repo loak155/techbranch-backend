@@ -8,7 +8,6 @@ RUN go build -o main ./cmd
 FROM alpine:3.18 AS production
 WORKDIR /app
 COPY --from=development /app/main .
-COPY .env .
 COPY migrations ./migrations
 
 EXPOSE 8080 9090
