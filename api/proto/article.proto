@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/loak155/techbranch-backend/pkg/pb";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+      title: "Techbranch API";
+      version: "1.0";
+      contact: {
+          name: "Techbranch";
+          url: "https://github.com/loak155/techbranch-backend";
+      };
+  };
+};
+
+service ArticleService {
+  rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse){
+    option (google.api.http) = {
+      post: "/api/v1/articles"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create new article";
+      summary: "Create new article";
+    };
+  }
+  rpc GetArticle(GetArticleRequest) returns (GetArticleResponse){
+    option (google.api.http) = {
+      get: "/api/v1/articles/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get article";
+      summary: "Get article";
+    };
+  }
+  rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse){
+    option (google.api.http) = {
+        get: "/api/v1/articles"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get articles";
+      summary: "Get articles";
+    };
+  }
+  rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse){
+    option (google.api.http) = {
+      put: "/api/v1/articles"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to update article";
+      summary: "Update article";
+    };
+  }
+  rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse){
+    option (google.api.http) = {
+      delete: "/api/v1/articles/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete article";
+      summary: "Delete article";
+    };
+  }
+}
+
+message Article {
+  int32 id = 1;
+  string title = 2 [(validate.rules).string.min_len = 1];
+  string url = 3 [(validate.rules).string.uri = true];
+  string image = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateArticleRequest {
+  string title = 1 [(validate.rules).string.min_len = 1];
+  string url = 2 [(validate.rules).string.uri = true];
+  string image = 3;
+}
+
+message CreateArticleResponse {
+  Article article = 1;
+}
+
+message GetArticleRequest {
+  int32 id = 1;
+}
+
+message GetArticleResponse {
+  Article article = 1;
+}
+
+message ListArticlesRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message ListArticlesResponse {
+  repeated Article articles = 1;
+}
+
+message UpdateArticleRequest {
+  int32 id = 1;
+  string title = 2 [(validate.rules).string.min_len = 1];
+  string url = 3 [(validate.rules).string.uri = true];
+  string image = 4;
+}
+
+message UpdateArticleResponse {
+  Article article = 1;
+}
+
+message DeleteArticleRequest {
+  uint64 id = 1;
+}
+
+message DeleteArticleResponse {
+}

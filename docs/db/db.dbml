@@ -1,0 +1,15 @@
+Project Techbranch {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Techbranch Database
+  '''
+}
+
+Table articles {
+  id bigserial [pk]
+  title varchar [not null]
+  url text [not null]
+  image text
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
