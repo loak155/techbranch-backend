@@ -23,7 +23,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service ArticleService {
   rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse){
     option (google.api.http) = {
-      post: "/api/v1/articles"
+      post: "/v1/articles"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -33,7 +33,7 @@ service ArticleService {
   }
   rpc GetArticle(GetArticleRequest) returns (GetArticleResponse){
     option (google.api.http) = {
-      get: "/api/v1/articles/{id}"
+      get: "/v1/articles/{id}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get article";
@@ -42,7 +42,7 @@ service ArticleService {
   }
   rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse){
     option (google.api.http) = {
-        get: "/api/v1/articles"
+        get: "/v1/articles"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get articles";
@@ -51,7 +51,7 @@ service ArticleService {
   }
   rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse){
     option (google.api.http) = {
-      put: "/api/v1/articles"
+      put: "/v1/articles"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -61,7 +61,7 @@ service ArticleService {
   }
   rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse){
     option (google.api.http) = {
-      delete: "/api/v1/articles/{id}"
+      delete: "/v1/articles/{id}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to delete article";

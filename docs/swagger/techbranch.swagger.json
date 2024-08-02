@@ -20,7 +20,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/articles": {
+    "/v1/articles": {
       "get": {
         "summary": "Get articles",
         "description": "Use this API to get articles",
@@ -124,7 +124,7 @@
         ]
       }
     },
-    "/api/v1/articles/{id}": {
+    "/v1/articles/{id}": {
       "get": {
         "summary": "Get article",
         "description": "Use this API to get article",
