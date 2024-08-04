@@ -8,9 +8,6 @@ import (
 	"github.com/loak155/techbranch-backend/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/health"
-	healthpb "google.golang.org/grpc/health/grpc_health_v1"
-	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -31,12 +28,6 @@ type articleGRPCServer struct {
 func NewArticleGRPCServer(grpcServer *grpc.Server, usecase usecase.IArticleUsecase) pb.ArticleServiceServer {
 	server := articleGRPCServer{usecase: usecase}
 	pb.RegisterArticleServiceServer(grpcServer, &server)
-
-	healthServer := health.NewServer()
-	healthpb.RegisterHealthServer(grpcServer, healthServer)
-	healthServer.SetServingStatus("article-server", healthpb.HealthCheckResponse_SERVING)
-
-	reflection.Register(grpcServer)
 	return &server
 }
 
