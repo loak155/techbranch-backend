@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/loak155/techbranch-backend/pkg/pb";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse){
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create new user";
+      summary: "Create new user";
+    };
+  }
+  rpc GetUser(GetUserRequest) returns (GetUserResponse){
+    option (google.api.http) = {
+      get: "/v1/users/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get user by id";
+      summary: "Get user by id";
+    };
+  }
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse){
+    option (google.api.http) = {
+      get: "/v1/users/{email}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get user by email";
+      summary: "Get user by email";
+    };
+  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse){
+    option (google.api.http) = {
+        get: "/v1/users"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get users";
+      summary: "Get users";
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse){
+    option (google.api.http) = {
+      put: "/v1/users"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to update user";
+      summary: "Update user";
+    };
+  }
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse){
+    option (google.api.http) = {
+      delete: "/v1/users/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete user";
+      summary: "Delete user";
+    };
+  }
+}
+
+message User {
+  int32 id = 1;
+  string username = 2 [(validate.rules).string = {min_len: 2, max_len: 20}];
+  string email = 3 [(validate.rules).string.email = true];
+  string password = 4 [(validate.rules).string = {min_len: 8, max_len: 30}];
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateUserRequest {
+  string username = 1 [(validate.rules).string = {min_len: 2, max_len: 20}];
+  string email = 2 [(validate.rules).string.email = true];
+  string password = 3;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message GetUserRequest {
+  int32 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1 [(validate.rules).string.email = true];
+}
+
+message GetUserByEmailResponse {
+  User user = 1;
+}
+
+message ListUsersRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message UpdateUserRequest {
+  int32 id = 1;
+  string username = 2 [(validate.rules).string = {min_len: 2, max_len: 20}];
+  string email = 3 [(validate.rules).string.email = true];
+  string password = 4 [(validate.rules).string = {min_len: 8, max_len: 30}];
+}
+
+message UpdateUserResponse {
+  User user = 1;
+}
+
+message DeleteUserRequest {
+  uint64 id = 1;
+}
+
+message DeleteUserResponse {
+}

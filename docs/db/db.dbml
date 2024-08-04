@@ -13,3 +13,12 @@ Table articles {
   created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
   updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
 }
+
+Table users {
+  id bigserial [pk]
+  username varchar [not null]
+  email varchar [not null, unique]
+  password varchar [not null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}

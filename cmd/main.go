@@ -15,10 +15,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/loak155/techbranch-backend/docs/swagger/statik"
 	"github.com/loak155/techbranch-backend/internal/adapter"
-	"github.com/loak155/techbranch-backend/internal/repository"
-	"github.com/loak155/techbranch-backend/internal/usecase"
 	"github.com/loak155/techbranch-backend/pkg/config"
-	"github.com/loak155/techbranch-backend/pkg/db"
 	"github.com/loak155/techbranch-backend/pkg/logger"
 	"github.com/loak155/techbranch-backend/pkg/migration"
 	"github.com/loak155/techbranch-backend/pkg/pb"
@@ -65,19 +62,8 @@ func main() {
 	}
 }
 
-func makeArticleServer(conf *config.Config) (*grpc.Server, pb.ArticleServiceServer) {
-	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(logger.GrpcLogger),
-	)
-	gormDB := db.NewDB(conf.DbSource)
-	articleRepository := repository.NewArticleRepository(gormDB)
-	articleUsecase := usecase.NewArticleUsecase(articleRepository)
-	articleServer := adapter.NewArticleGRPCServer(grpcServer, articleUsecase)
-	return grpcServer, articleServer
-}
-
 func runGrpcServer(ctx context.Context, waitGroup *errgroup.Group, conf *config.Config) {
-	grpcServer, _ := makeArticleServer(conf)
+	grpcServer, _, _ := adapter.NewGRPCServer(conf)
 
 	listener, err := net.Listen("tcp", conf.GrpcServerAddress)
 	if err != nil {
@@ -116,10 +102,14 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 	})
 	grpcMux := runtime.NewServeMux(jsonOption)
 
-	_, server := makeArticleServer(conf)
-	err := pb.RegisterArticleServiceHandlerServer(ctx, grpcMux, server)
+	_, articleServer, userServer := adapter.NewGRPCServer(conf)
+	err := pb.RegisterArticleServiceHandlerServer(ctx, grpcMux, articleServer)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to register article service handler")
+	}
+	err = pb.RegisterUserServiceHandlerServer(ctx, grpcMux, userServer)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to register user service handler")
 	}
 
 	mux := http.NewServeMux()
