@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/loak155/techbranch-backend/pkg/pb";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service BookmarkService {
+  rpc CreateBookmark(CreateBookmarkRequest) returns (CreateBookmarkResponse){
+    option (google.api.http) = {
+      post: "/v1/bookmarks"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create new bookmark";
+      summary: "Create new bookmark";
+    };
+  }
+  rpc GetBookmarkCountByArticleID(GetBookmarkCountByArticleIDRequest) returns (GetBookmarkCountByArticleIDResponse){
+    option (google.api.http) = {
+      get: "/v1/articles/{article_id}/bookmarks/count"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get bookmark count by article ID";
+      summary: "Get bookmark count by article ID";
+    };
+  }
+  rpc ListBookmarksByUserID(ListBookmarksByUserIDRequest) returns (ListBookmarksByUserIDResponse){
+    option (google.api.http) = {
+      get: "/v1/users/{user_id}/bookmarks"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get bookmarks by user ID";
+      summary: "Get bookmarks by user ID";
+    };
+  }
+  rpc ListBookmarksByArticleID(ListBookmarksByArticleIDRequest) returns (ListBookmarksByArticleIDResponse){
+    option (google.api.http) = {
+      get: "/v1/articles/{article_id}/bookmarks"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get bookmarks by article ID";
+      summary: "Get bookmarks by article ID";
+    };
+  }
+  rpc DeleteBookmarkByUserIDAndArticleID(DeleteBookmarkByUserIDAndArticleIDRequest) returns (DeleteBookmarkByUserIDAndArticleIDResponse){
+    option (google.api.http) = {
+      delete: "/v1/users/{user_id}/articles/{article_id}/bookmarks"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete bookmark";
+      summary: "Delete bookmark";
+    };
+  }
+	rpc DeleteBookmarkByUserID(DeleteBookmarkByUserIDRequest) returns (DeleteBookmarkByUserIDResponse){
+    option (google.api.http) = {
+      delete: "/v1/users/{user_id}/bookmarks"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete bookmark by user ID";
+      summary: "Delete bookmark by user ID";
+    };
+  }
+	rpc DeleteBookmarkByArticleID(DeleteBookmarkByArticleIDRequest) returns (DeleteBookmarkByArticleIDResponse){
+    option (google.api.http) = {
+      delete: "/v1/articles/{article_id}/bookmarks"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete bookmark by article ID";
+      summary: "Delete bookmark by article ID";
+    };
+  }
+}
+
+message Bookmark {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 article_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message CreateBookmarkRequest {
+  int32 user_id = 1;
+  int32 article_id = 2;
+}
+
+message CreateBookmarkResponse {
+  Bookmark bookmark = 1;
+}
+
+message GetBookmarkCountByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message GetBookmarkCountByArticleIDResponse {
+  int32 count = 1;
+}
+
+message ListBookmarksByUserIDRequest {
+  int32 user_id = 1;
+}
+
+message ListBookmarksByUserIDResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message ListBookmarksByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message ListBookmarksByArticleIDResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message DeleteBookmarkByUserIDAndArticleIDRequest {
+  int32 user_id = 1;
+  int32 article_id = 2;
+}
+
+message DeleteBookmarkByUserIDAndArticleIDResponse {
+}
+
+message DeleteBookmarkByUserIDRequest {
+  uint64 user_id = 1;
+}
+
+message DeleteBookmarkByUserIDResponse {
+}
+
+message DeleteBookmarkByArticleIDRequest {
+  uint64 article_id = 1;
+}
+
+message DeleteBookmarkByArticleIDResponse {
+}

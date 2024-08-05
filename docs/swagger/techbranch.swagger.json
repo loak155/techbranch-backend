@@ -13,6 +13,9 @@
       "name": "ArticleService"
     },
     {
+      "name": "BookmarkService"
+    },
+    {
       "name": "UserService"
     }
   ],
@@ -127,6 +130,103 @@
         ]
       }
     },
+    "/v1/articles/{articleId}/bookmarks": {
+      "get": {
+        "summary": "Get bookmarks by article ID",
+        "description": "Use this API to get bookmarks by article ID",
+        "operationId": "BookmarkService_ListBookmarksByArticleID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListBookmarksByArticleIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "BookmarkService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete bookmark by article ID",
+        "description": "Use this API to delete bookmark by article ID",
+        "operationId": "BookmarkService_DeleteBookmarkByArticleID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoDeleteBookmarkByArticleIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "BookmarkService"
+        ]
+      }
+    },
+    "/v1/articles/{articleId}/bookmarks/count": {
+      "get": {
+        "summary": "Get bookmark count by article ID",
+        "description": "Use this API to get bookmark count by article ID",
+        "operationId": "BookmarkService_GetBookmarkCountByArticleID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGetBookmarkCountByArticleIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "BookmarkService"
+        ]
+      }
+    },
     "/v1/articles/{id}": {
       "get": {
         "summary": "Get article",
@@ -188,6 +288,40 @@
         ],
         "tags": [
           "ArticleService"
+        ]
+      }
+    },
+    "/v1/bookmarks": {
+      "post": {
+        "summary": "Create new bookmark",
+        "description": "Use this API to create new bookmark",
+        "operationId": "BookmarkService_CreateBookmark",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoCreateBookmarkResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoCreateBookmarkRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BookmarkService"
         ]
       }
     },
@@ -390,6 +524,110 @@
           "UserService"
         ]
       }
+    },
+    "/v1/users/{userId}/articles/{articleId}/bookmarks": {
+      "delete": {
+        "summary": "Delete bookmark",
+        "description": "Use this API to delete bookmark",
+        "operationId": "BookmarkService_DeleteBookmarkByUserIDAndArticleID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoDeleteBookmarkByUserIDAndArticleIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "BookmarkService"
+        ]
+      }
+    },
+    "/v1/users/{userId}/bookmarks": {
+      "get": {
+        "summary": "Get bookmarks by user ID",
+        "description": "Use this API to get bookmarks by user ID",
+        "operationId": "BookmarkService_ListBookmarksByUserID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListBookmarksByUserIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "BookmarkService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete bookmark by user ID",
+        "description": "Use this API to delete bookmark by user ID",
+        "operationId": "BookmarkService_DeleteBookmarkByUserID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoDeleteBookmarkByUserIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "BookmarkService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -408,6 +646,31 @@
         },
         "image": {
           "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protoBookmark": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "articleId": {
+          "type": "integer",
+          "format": "int32"
         },
         "createdAt": {
           "type": "string",
@@ -441,6 +704,27 @@
         }
       }
     },
+    "protoCreateBookmarkRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "articleId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protoCreateBookmarkResponse": {
+      "type": "object",
+      "properties": {
+        "bookmark": {
+          "$ref": "#/definitions/protoBookmark"
+        }
+      }
+    },
     "protoCreateUserRequest": {
       "type": "object",
       "properties": {
@@ -466,6 +750,15 @@
     "protoDeleteArticleResponse": {
       "type": "object"
     },
+    "protoDeleteBookmarkByArticleIDResponse": {
+      "type": "object"
+    },
+    "protoDeleteBookmarkByUserIDAndArticleIDResponse": {
+      "type": "object"
+    },
+    "protoDeleteBookmarkByUserIDResponse": {
+      "type": "object"
+    },
     "protoDeleteUserResponse": {
       "type": "object"
     },
@@ -474,6 +767,15 @@
       "properties": {
         "article": {
           "$ref": "#/definitions/protoArticle"
+        }
+      }
+    },
+    "protoGetBookmarkCountByArticleIDResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -501,6 +803,30 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/protoArticle"
+          }
+        }
+      }
+    },
+    "protoListBookmarksByArticleIDResponse": {
+      "type": "object",
+      "properties": {
+        "bookmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoBookmark"
+          }
+        }
+      }
+    },
+    "protoListBookmarksByUserIDResponse": {
+      "type": "object",
+      "properties": {
+        "bookmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoBookmark"
           }
         }
       }

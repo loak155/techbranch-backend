@@ -1,7 +1,3 @@
--- SQL dump generated using DBML (dbml-lang.org)
--- Database: PostgreSQL
--- Generated at: 2024-07-17T15:12:06.505Z
-
 CREATE TABLE "articles" (
   "id" bigserial PRIMARY KEY,
   "title" varchar NOT NULL,
@@ -19,3 +15,15 @@ CREATE TABLE "users" (
   "created_at" timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   "updated_at" timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
+
+CREATE TABLE "bookmarks" (
+  "id" bigserial PRIMARY KEY,
+  "user_id" bigint NOT NULL,
+  "article_id" bigint NOT NULL,
+  "created_at" timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+  "updated_at" timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+);
+
+ALTER TABLE "bookmarks" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+
+ALTER TABLE "bookmarks" ADD FOREIGN KEY ("article_id") REFERENCES "articles" ("id");

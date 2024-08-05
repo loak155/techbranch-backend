@@ -23,6 +23,7 @@ migratedown1:
 .PHONY: protoc
 protoc:
 	rm -f pkg/pb/*.go
+	rm -f docs/swagger/statik/statik.go
 	rm -f docs/swagger/techbranch.swagger.json
 	protoc \
 	-I third_party \
@@ -39,6 +40,7 @@ protoc:
 mockgen:
 	mockgen -source=./internal/repository/article_repository.go -destination=./mock/mock_article_repository.go -package=mock
 	mockgen -source=./internal/repository/user_repository.go -destination=./mock/mock_user_repository.go -package=mock
+	mockgen -source=./internal/repository/bookmark_repository.go -destination=./mock/mock_bookmark_repository.go -package=mock
 
 .PHONY: test
 test:
