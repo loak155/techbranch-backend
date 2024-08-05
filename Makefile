@@ -41,6 +41,7 @@ mockgen:
 	mockgen -source=./internal/repository/article_repository.go -destination=./mock/mock_article_repository.go -package=mock
 	mockgen -source=./internal/repository/user_repository.go -destination=./mock/mock_user_repository.go -package=mock
 	mockgen -source=./internal/repository/bookmark_repository.go -destination=./mock/mock_bookmark_repository.go -package=mock
+	mockgen -source=./internal/repository/comment_repository.go -destination=./mock/mock_comment_repository.go -package=mock
 
 .PHONY: test
 test:

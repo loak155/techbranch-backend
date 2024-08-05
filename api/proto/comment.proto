@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/loak155/techbranch-backend/pkg/pb";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service CommentService {
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse){
+    option (google.api.http) = {
+      post: "/v1/comments"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create new comment";
+      summary: "Create new comment";
+    };
+  }
+  rpc ListCommentsByUserID(ListCommentsByUserIDRequest) returns (ListCommentsByUserIDResponse){
+    option (google.api.http) = {
+      get: "/v1/users/{user_id}/comments"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get comments by user ID";
+      summary: "Get comments by user ID";
+    };
+  }
+  rpc ListCommentsByArticleID(ListCommentsByArticleIDRequest) returns (ListCommentsByArticleIDResponse){
+    option (google.api.http) = {
+      get: "/v1/articles/{article_id}/comments"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get comments by article ID";
+      summary: "Get comments by article ID";
+    };
+  }
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse){
+    option (google.api.http) = {
+      delete: "/v1/comments/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete comment";
+      summary: "Delete comment";
+    };
+  }
+  rpc DeleteCommentByUserIDAndArticleID(DeleteCommentByUserIDAndArticleIDRequest) returns (DeleteCommentByUserIDAndArticleIDResponse){
+    option (google.api.http) = {
+      delete: "/v1/users/{user_id}/articles/{article_id}/comments"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete comment by user ID and article ID";
+      summary: "Delete comment by user ID and article ID";
+    };
+  }
+	rpc DeleteCommentByUserID(DeleteCommentByUserIDRequest) returns (DeleteCommentByUserIDResponse){
+    option (google.api.http) = {
+      delete: "/v1/users/{user_id}/comments"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete comment by user ID";
+      summary: "Delete comment by user ID";
+    };
+  }
+	rpc DeleteCommentByArticleID(DeleteCommentByArticleIDRequest) returns (DeleteCommentByArticleIDResponse){
+    option (google.api.http) = {
+      delete: "/v1/articles/{article_id}/comments"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete comment by article ID";
+      summary: "Delete comment by article ID";
+    };
+  }
+}
+
+message Comment {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 article_id = 3;
+  string content = 4 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateCommentRequest {
+  int32 user_id = 1;
+  int32 article_id = 2;
+  string content = 3 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+}
+
+message CreateCommentResponse {
+  Comment comment = 1;
+}
+
+message ListCommentsByUserIDRequest {
+  int32 user_id = 1;
+}
+
+message ListCommentsByUserIDResponse {
+  repeated Comment comments = 1;
+}
+
+message ListCommentsByArticleIDRequest {
+  int32 article_id = 1;
+}
+
+message ListCommentsByArticleIDResponse {
+  repeated Comment comments = 1;
+}
+
+message DeleteCommentRequest {
+  int32 id = 1;
+}
+
+message DeleteCommentResponse {
+}
+
+message DeleteCommentByUserIDAndArticleIDRequest {
+  int32 user_id = 1;
+  int32 article_id = 2;
+}
+
+message DeleteCommentByUserIDAndArticleIDResponse {
+}
+
+message DeleteCommentByUserIDRequest {
+  uint64 user_id = 1;
+}
+
+message DeleteCommentByUserIDResponse {
+}
+
+message DeleteCommentByArticleIDRequest {
+  uint64 article_id = 1;
+}
+
+message DeleteCommentByArticleIDResponse {
+}

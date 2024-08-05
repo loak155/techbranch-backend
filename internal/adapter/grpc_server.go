@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func NewGRPCServer(conf *config.Config) (*grpc.Server, pb.ArticleServiceServer, pb.UserServiceServer, pb.BookmarkServiceServer) {
+func NewGRPCServer(conf *config.Config) (*grpc.Server, pb.ArticleServiceServer, pb.UserServiceServer, pb.BookmarkServiceServer, pb.CommentServiceServer) {
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(logger.GrpcLogger),
 	)
@@ -32,10 +32,14 @@ func NewGRPCServer(conf *config.Config) (*grpc.Server, pb.ArticleServiceServer, 
 	bookmarkUsecase := usecase.NewBookmarkUsecase(bookmarkRepository)
 	bookmarkServer := NewBookmarkGRPCServer(grpcServer, bookmarkUsecase)
 
+	commentRepository := repository.NewCommentRepository(gormDB)
+	commentUsecase := usecase.NewCommentUsecase(commentRepository)
+	commentServer := NewCommentGRPCServer(grpcServer, commentUsecase)
+
 	healthServer := health.NewServer()
 	healthpb.RegisterHealthServer(grpcServer, healthServer)
 	healthServer.SetServingStatus("grpc-server", healthpb.HealthCheckResponse_SERVING)
 
 	reflection.Register(grpcServer)
-	return grpcServer, articleServer, userServer, bookmarkServer
+	return grpcServer, articleServer, userServer, bookmarkServer, commentServer
 }

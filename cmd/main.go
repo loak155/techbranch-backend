@@ -63,7 +63,7 @@ func main() {
 }
 
 func runGrpcServer(ctx context.Context, waitGroup *errgroup.Group, conf *config.Config) {
-	grpcServer, _, _, _ := adapter.NewGRPCServer(conf)
+	grpcServer, _, _, _, _ := adapter.NewGRPCServer(conf)
 
 	listener, err := net.Listen("tcp", conf.GrpcServerAddress)
 	if err != nil {
@@ -102,7 +102,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 	})
 	grpcMux := runtime.NewServeMux(jsonOption)
 
-	_, articleServer, userServer, bookmarkServer := adapter.NewGRPCServer(conf)
+	_, articleServer, userServer, bookmarkServer, commentServer := adapter.NewGRPCServer(conf)
 	if err := pb.RegisterArticleServiceHandlerServer(ctx, grpcMux, articleServer); err != nil {
 		log.Fatal().Err(err).Msg("failed to register article service handler")
 	}
@@ -111,6 +111,9 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 	}
 	if err := pb.RegisterBookmarkServiceHandlerServer(ctx, grpcMux, bookmarkServer); err != nil {
 		log.Fatal().Err(err).Msg("failed to register bookmark service handler")
+	}
+	if err := pb.RegisterCommentServiceHandlerServer(ctx, grpcMux, commentServer); err != nil {
+		log.Fatal().Err(err).Msg("failed to register comment service handler")
 	}
 
 	mux := http.NewServeMux()
