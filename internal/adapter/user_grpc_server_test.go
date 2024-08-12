@@ -178,84 +178,6 @@ func TestGetUser(t *testing.T) {
 	}
 }
 
-func TestGetUserByEmail(t *testing.T) {
-	type args struct {
-		ctx context.Context
-		req *pb.GetUserByEmailRequest
-	}
-
-	req := &pb.GetUserByEmailRequest{
-		Email: "test@example.com",
-	}
-
-	repoResUser := domain.User{
-		ID:        1,
-		Username:  "test_username",
-		Email:     "test@example.com",
-		Password:  "test_password",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
-
-	testCases := []struct {
-		name          string
-		args          args
-		buildStubs    func(repo *mock.MockIUserRepository)
-		checkResponse func(t *testing.T, res *pb.GetUserByEmailResponse, err error)
-	}{
-		{
-			name: "OK",
-			args: args{
-				ctx: context.Background(),
-				req: req,
-			},
-			buildStubs: func(repo *mock.MockIUserRepository) {
-				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&repoResUser, nil)
-			},
-			checkResponse: func(t *testing.T, res *pb.GetUserByEmailResponse, err error) {
-				assert.NoError(t, err)
-				assert.Equal(t, repoResUser.Username, res.User.Username)
-				assert.Equal(t, repoResUser.Email, res.User.Email)
-				assert.Equal(t, repoResUser.Password, res.User.Password)
-				assert.NotNil(t, res.User.CreatedAt)
-				assert.NotNil(t, res.User.UpdatedAt)
-			},
-		},
-		{
-			name: "NotFound",
-			args: args{
-				ctx: context.Background(),
-				req: req,
-			},
-			buildStubs: func(repo *mock.MockIUserRepository) {
-				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{}, gorm.ErrRecordNotFound)
-			},
-			checkResponse: func(t *testing.T, res *pb.GetUserByEmailResponse, err error) {
-				assert.Error(t, err)
-				assert.Contains(t, err.Error(), "failed to get user")
-			},
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			mockCtrl := gomock.NewController(t)
-			defer mockCtrl.Finish()
-
-			repo := mock.NewMockIUserRepository(mockCtrl)
-			tc.buildStubs(repo)
-
-			usecase := usecase.NewUserUsecase(repo)
-			server := grpc.NewServer()
-			server.GracefulStop()
-
-			s := NewUserGRPCServer(server, usecase)
-			res, err := s.GetUserByEmail(tc.args.ctx, tc.args.req)
-			tc.checkResponse(t, res, err)
-		})
-	}
-}
-
 func TestListUsers(t *testing.T) {
 	type args struct {
 		ctx context.Context
@@ -267,9 +189,16 @@ func TestListUsers(t *testing.T) {
 		Limit:  10,
 	}
 
+	reqEmail := &pb.ListUsersRequest{
+		Email: "test@example.com",
+	}
+
+	reqInvalidEmail := &pb.ListUsersRequest{
+		Email: "invalid",
+	}
+
 	repoResUsers := []domain.User{
 		{
-
 			ID:        1,
 			Username:  "test_username",
 			Email:     "test@example.com",
@@ -278,8 +207,18 @@ func TestListUsers(t *testing.T) {
 			UpdatedAt: time.Now(),
 		},
 		{
-
 			ID:        2,
+			Username:  "test_username",
+			Email:     "test@example.com",
+			Password:  "test_password",
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+	}
+
+	repoResUserEmail := []domain.User{
+		{
+			ID:        1,
 			Username:  "test_username",
 			Email:     "test@example.com",
 			Password:  "test_password",
@@ -295,7 +234,7 @@ func TestListUsers(t *testing.T) {
 		checkResponse func(t *testing.T, res *pb.ListUsersResponse, err error)
 	}{
 		{
-			name: "OK",
+			name: "OK_ListUsers",
 			args: args{
 				ctx: context.Background(),
 				req: req,
@@ -327,6 +266,54 @@ func TestListUsers(t *testing.T) {
 			checkResponse: func(t *testing.T, res *pb.ListUsersResponse, err error) {
 				assert.Error(t, err)
 				assert.Contains(t, err.Error(), "failed to list users")
+			},
+		},
+		{
+			name: "OK_GetUserByEmail",
+			args: args{
+				ctx: context.Background(),
+				req: reqEmail,
+			},
+			buildStubs: func(repo *mock.MockIUserRepository) {
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&repoResUserEmail[0], nil)
+			},
+			checkResponse: func(t *testing.T, res *pb.ListUsersResponse, err error) {
+				assert.NoError(t, err)
+				assert.Equal(t, len(repoResUserEmail), len(res.Users))
+				for i, repoResUser := range repoResUserEmail {
+					assert.Equal(t, repoResUser.Username, res.Users[i].Username)
+					assert.Equal(t, repoResUser.Email, res.Users[i].Email)
+					assert.Equal(t, repoResUser.Password, res.Users[i].Password)
+					assert.NotNil(t, res.Users[i].CreatedAt)
+					assert.NotNil(t, res.Users[i].UpdatedAt)
+				}
+			},
+		},
+		{
+			name: "NotFound",
+			args: args{
+				ctx: context.Background(),
+				req: reqEmail,
+			},
+			buildStubs: func(repo *mock.MockIUserRepository) {
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{}, gorm.ErrRecordNotFound)
+			},
+			checkResponse: func(t *testing.T, res *pb.ListUsersResponse, err error) {
+				assert.Error(t, err)
+				assert.Contains(t, err.Error(), "failed to get user by email")
+			},
+		},
+		{
+			name: "InvalidEmail",
+			args: args{
+				ctx: context.Background(),
+				req: reqInvalidEmail,
+			},
+			buildStubs: func(repo *mock.MockIUserRepository) {
+			},
+			checkResponse: func(t *testing.T, res *pb.ListUsersResponse, err error) {
+				assert.Error(t, err)
+				assert.Contains(t, err.Error(), "invalid argument")
 			},
 		},
 	}

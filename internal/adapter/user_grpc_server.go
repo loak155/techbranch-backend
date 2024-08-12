@@ -78,31 +78,17 @@ func (server *userGRPCServer) GetUser(ctx context.Context, req *pb.GetUserReques
 	return &res, nil
 }
 
-func (server *userGRPCServer) GetUserByEmail(ctx context.Context, req *pb.GetUserByEmailRequest) (*pb.GetUserByEmailResponse, error) {
-	res := pb.GetUserByEmailResponse{}
-	user, err := server.usecase.GetUserByEmail(req.Email)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get user by email: %v", err)
-	}
-	res.User = &pb.User{
-		Id:        int32(user.ID),
-		Username:  user.Username,
-		Email:     user.Email,
-		Password:  user.Password,
-		CreatedAt: &timestamppb.Timestamp{Seconds: int64(user.CreatedAt.Unix()), Nanos: int32(user.CreatedAt.Nanosecond())},
-		UpdatedAt: &timestamppb.Timestamp{Seconds: int64(user.UpdatedAt.Unix()), Nanos: int32(user.UpdatedAt.Nanosecond())},
-	}
-
-	return &res, nil
-}
-
 func (server *userGRPCServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	res := pb.ListUsersResponse{}
-	userRes, err := server.usecase.ListUsers(int(req.Offset), int(req.Limit))
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to list users: %v", err)
-	}
-	for _, user := range userRes {
+
+	if req.Email != "" {
+		if err := req.Validate(); err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid argument: %v", err)
+		}
+		user, err := server.usecase.GetUserByEmail(req.Email)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get user by email: %v", err)
+		}
 		res.Users = append(res.Users, &pb.User{
 			Id:        int32(user.ID),
 			Username:  user.Username,
@@ -111,6 +97,22 @@ func (server *userGRPCServer) ListUsers(ctx context.Context, req *pb.ListUsersRe
 			CreatedAt: &timestamppb.Timestamp{Seconds: int64(user.CreatedAt.Unix()), Nanos: int32(user.CreatedAt.Nanosecond())},
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(user.UpdatedAt.Unix()), Nanos: int32(user.UpdatedAt.Nanosecond())},
 		})
+	} else {
+		users, err := server.usecase.ListUsers(int(req.Offset), int(req.Limit))
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to list users: %v", err)
+		}
+
+		for _, user := range users {
+			res.Users = append(res.Users, &pb.User{
+				Id:        int32(user.ID),
+				Username:  user.Username,
+				Email:     user.Email,
+				Password:  user.Password,
+				CreatedAt: &timestamppb.Timestamp{Seconds: int64(user.CreatedAt.Unix()), Nanos: int32(user.CreatedAt.Nanosecond())},
+				UpdatedAt: &timestamppb.Timestamp{Seconds: int64(user.UpdatedAt.Unix()), Nanos: int32(user.UpdatedAt.Nanosecond())},
+			})
+		}
 	}
 
 	return &res, nil
