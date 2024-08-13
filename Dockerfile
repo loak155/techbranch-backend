@@ -9,6 +9,7 @@ FROM alpine:3.18 AS production
 WORKDIR /app
 COPY --from=development /app/main .
 COPY migrations ./migrations
+COPY docs/swagger ./docs/swagger
 
 EXPOSE 8080 9090
 CMD [ "/app/main" ]

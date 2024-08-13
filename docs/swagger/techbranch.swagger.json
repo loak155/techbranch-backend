@@ -13,6 +13,9 @@
       "name": "ArticleService"
     },
     {
+      "name": "AuthService"
+    },
+    {
       "name": "BookmarkService"
     },
     {
@@ -66,7 +69,8 @@
         ],
         "tags": [
           "ArticleService"
-        ]
+        ],
+        "security": []
       },
       "post": {
         "summary": "Create new article",
@@ -163,7 +167,8 @@
         ],
         "tags": [
           "BookmarkService"
-        ]
+        ],
+        "security": []
       },
       "delete": {
         "summary": "Delete bookmark by article ID",
@@ -227,7 +232,8 @@
         ],
         "tags": [
           "BookmarkService"
-        ]
+        ],
+        "security": []
       }
     },
     "/v1/articles/{articleId}/comments": {
@@ -260,7 +266,8 @@
         ],
         "tags": [
           "CommentService"
-        ]
+        ],
+        "security": []
       },
       "delete": {
         "summary": "Delete comment by article ID",
@@ -324,7 +331,8 @@
         ],
         "tags": [
           "ArticleService"
-        ]
+        ],
+        "security": []
       },
       "delete": {
         "summary": "Delete article",
@@ -459,6 +467,221 @@
         ]
       }
     },
+    "/v1/oauth/google/callback": {
+      "get": {
+        "summary": "Get google login callback",
+        "description": "Use this API to get google login callback",
+        "operationId": "AuthService_GoogleLoginCallback",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGoogleLoginCallbackResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": []
+      }
+    },
+    "/v1/oauth/google/login": {
+      "get": {
+        "summary": "Get google login url",
+        "description": "Use this API to get google login url",
+        "operationId": "AuthService_GetGoogleLoginURL",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGetGoogleLoginURLResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ],
+        "security": []
+      }
+    },
+    "/v1/refresh-token": {
+      "post": {
+        "summary": "Refresh token",
+        "description": "Use this API to refresh token",
+        "operationId": "AuthService_RefreshToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoRefreshTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": []
+      }
+    },
+    "/v1/signin": {
+      "post": {
+        "summary": "Signin",
+        "description": "Use this API to signin",
+        "operationId": "AuthService_Signin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoSigninResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoSigninRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": []
+      }
+    },
+    "/v1/signin/user": {
+      "get": {
+        "summary": "Get signin user",
+        "description": "Use this API to signin user",
+        "operationId": "AuthService_GetSigninUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGetSigninUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/signout": {
+      "post": {
+        "summary": "Signout",
+        "description": "Use this API to signout",
+        "operationId": "AuthService_Signout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoSignoutResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/signup": {
+      "post": {
+        "summary": "Signup",
+        "description": "Use this API to signup",
+        "operationId": "AuthService_Signup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoSignupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoSignupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": []
+      }
+    },
     "/v1/users": {
       "get": {
         "summary": "Get users",
@@ -492,6 +715,12 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -556,38 +785,6 @@
             "schema": {
               "$ref": "#/definitions/protoUpdateUserRequest"
             }
-          }
-        ],
-        "tags": [
-          "UserService"
-        ]
-      }
-    },
-    "/v1/users/{email}": {
-      "get": {
-        "summary": "Get user by email",
-        "description": "Use this API to get user by email",
-        "operationId": "UserService_GetUserByEmail",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoGetUserByEmailResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "email",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "tags": [
@@ -1081,7 +1278,15 @@
         }
       }
     },
-    "protoGetUserByEmailResponse": {
+    "protoGetGoogleLoginURLResponse": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "protoGetSigninUserResponse": {
       "type": "object",
       "properties": {
         "user": {
@@ -1094,6 +1299,24 @@
       "properties": {
         "user": {
           "$ref": "#/definitions/protoUser"
+        }
+      }
+    },
+    "protoGoogleLoginCallbackResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "tokenType": {
+          "type": "string"
+        },
+        "expiresIn": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "refreshToken": {
+          "type": "string"
         }
       }
     },
@@ -1166,6 +1389,68 @@
             "type": "object",
             "$ref": "#/definitions/protoUser"
           }
+        }
+      }
+    },
+    "protoRefreshTokenResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        }
+      }
+    },
+    "protoSigninRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "protoSigninResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "tokenType": {
+          "type": "string"
+        },
+        "expiresIn": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "protoSignoutResponse": {
+      "type": "object"
+    },
+    "protoSignupRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "protoSignupResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/protoUser"
         }
       }
     },
@@ -1275,5 +1560,18 @@
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "description": "Authentication token, prefixed by Bearer: Bearer \u003ctoken\u003e",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
 }

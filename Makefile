@@ -23,7 +23,6 @@ migratedown1:
 .PHONY: protoc
 protoc:
 	rm -f pkg/pb/*.go
-	rm -f docs/swagger/statik/statik.go
 	rm -f docs/swagger/techbranch.swagger.json
 	protoc \
 	-I third_party \
@@ -32,9 +31,8 @@ protoc:
 	--go-grpc_out=pkg/pb --go-grpc_opt=paths=source_relative \
 	--validate_out="lang=go:pkg/pb" --validate_opt=paths=source_relative \
 	--grpc-gateway_out=allow_delete_body=true:pkg/pb --grpc-gateway_opt=paths=source_relative \
-	--openapiv2_out=docs/swagger --openapiv2_opt=allow_merge=true,merge_file_name=techbranch \
+	--openapiv2_out=docs/swagger --openapiv2_opt=allow_merge=true --openapiv2_opt=merge_file_name=techbranch \
 	api/proto/*.proto
-	statik -src=./docs/swagger -dest=./docs/swagger
 
 .PHONY: mockgen
 mockgen:

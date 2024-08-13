@@ -9,17 +9,19 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/go-openapi/runtime/middleware"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
-	_ "github.com/loak155/techbranch-backend/docs/swagger/statik"
 	"github.com/loak155/techbranch-backend/internal/adapter"
+	"github.com/loak155/techbranch-backend/pkg/auth"
 	"github.com/loak155/techbranch-backend/pkg/config"
+	"github.com/loak155/techbranch-backend/pkg/jwt"
 	"github.com/loak155/techbranch-backend/pkg/logger"
 	"github.com/loak155/techbranch-backend/pkg/migration"
 	"github.com/loak155/techbranch-backend/pkg/pb"
-	"github.com/rakyll/statik/fs"
+	"github.com/loak155/techbranch-backend/pkg/redis"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/sync/errgroup"
@@ -63,7 +65,7 @@ func main() {
 }
 
 func runGrpcServer(ctx context.Context, waitGroup *errgroup.Group, conf *config.Config) {
-	grpcServer, _, _, _, _ := adapter.NewGRPCServer(conf)
+	grpcServer, _, _, _, _, _ := adapter.NewGRPCServer(conf)
 
 	listener, err := net.Listen("tcp", conf.GrpcServerAddress)
 	if err != nil {
@@ -102,7 +104,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 	})
 	grpcMux := runtime.NewServeMux(jsonOption)
 
-	_, articleServer, userServer, bookmarkServer, commentServer := adapter.NewGRPCServer(conf)
+	_, articleServer, userServer, bookmarkServer, commentServer, authServer := adapter.NewGRPCServer(conf)
 	if err := pb.RegisterArticleServiceHandlerServer(ctx, grpcMux, articleServer); err != nil {
 		log.Fatal().Err(err).Msg("failed to register article service handler")
 	}
@@ -115,25 +117,30 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 	if err := pb.RegisterCommentServiceHandlerServer(ctx, grpcMux, commentServer); err != nil {
 		log.Fatal().Err(err).Msg("failed to register comment service handler")
 	}
+	if err := pb.RegisterAuthServiceHandlerServer(ctx, grpcMux, authServer); err != nil {
+		log.Fatal().Err(err).Msg("failed to register auth service handler")
+	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-	statikFS, err := fs.New()
-	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create statik fs")
-	}
-	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(statikFS))
-	mux.Handle("/swagger/", swaggerHandler)
+	mux.Handle("/docs/swagger/techbranch.swagger.json", http.FileServer(http.Dir(".")))
+	mux.Handle("/docs", middleware.SwaggerUI(middleware.SwaggerUIOpts{
+		SpecURL: "/docs/swagger/techbranch.swagger.json",
+	}, nil))
+
+	jwtAccessTokenManager := jwt.NewJwtManager(conf.JWTIssuer, conf.JwtSecret, conf.AccessTokenExpires)
+	redisAccessTokenManager := redis.NewRedisManager(conf.RedisAddress, conf.RedisAccessTokenDB, conf.AccessTokenExpires)
+	authHandler := auth.NewAuthHandler(*jwtAccessTokenManager, *redisAccessTokenManager, auth.AuthRequests)
 
 	httpServer := &http.Server{
 		Addr:    conf.HttpServerAddress,
-		Handler: logger.HttpLogger(mux),
+		Handler: logger.HttpLogger(authHandler.HttpAuth(mux)),
 	}
 
 	waitGroup.Go(func() error {
 		log.Info().Msg("start HTTP gateway server")
-		err = httpServer.ListenAndServe()
+		err := httpServer.ListenAndServe()
 		if err != nil {
 			if errors.Is(err, http.ErrServerClosed) {
 				return nil
@@ -147,7 +154,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 	waitGroup.Go(func() error {
 		<-ctx.Done()
 		log.Info().Msg("graceful shutdown HTTP gateway server")
-		err := httpServer.Shutdown(context.Background())
+		err := httpServer.Shutdown(ctx)
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to shutdown HTTP gateway server")
 			return err

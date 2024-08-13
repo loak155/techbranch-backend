@@ -26,6 +26,7 @@ service BookmarkService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get bookmark count by article ID";
       summary: "Get bookmark count by article ID";
+      security: {};
     };
   }
   rpc ListBookmarksByUserID(ListBookmarksByUserIDRequest) returns (ListBookmarksByUserIDResponse){
@@ -44,6 +45,7 @@ service BookmarkService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get bookmarks by article ID";
       summary: "Get bookmarks by article ID";
+      security: {};
     };
   }
   rpc DeleteBookmarkByUserIDAndArticleID(DeleteBookmarkByUserIDAndArticleIDRequest) returns (DeleteBookmarkByUserIDAndArticleIDResponse){

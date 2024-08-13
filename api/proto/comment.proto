@@ -36,6 +36,7 @@ service CommentService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get comments by article ID";
       summary: "Get comments by article ID";
+      security: {};
     };
   }
   rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse){

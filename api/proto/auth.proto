@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/loak155/techbranch-backend/pkg/pb";
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "user.proto";
+
+service AuthService {
+  rpc Signup(SignupRequest) returns (SignupResponse){
+    option (google.api.http) = {
+      post: "/v1/signup"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to signup";
+      summary: "Signup";
+      security: {};
+    };
+  }
+  rpc Signin(SigninRequest) returns (SigninResponse){
+    option (google.api.http) = {
+      post: "/v1/signin"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to signin";
+      summary: "Signin";
+      security: {};
+    };
+  }
+  rpc Signout(SignoutRequest) returns (SignoutResponse){
+    option (google.api.http) = {
+      post: "/v1/signout"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to signout";
+      summary: "Signout";
+    };
+  }
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse){
+    option (google.api.http) = {
+      post: "/v1/refresh-token"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to refresh token";
+      summary: "Refresh token";
+      security: {};
+    };
+  }
+  rpc GetSigninUser(GetSigninUserRequest) returns (GetSigninUserResponse){
+    option (google.api.http) = {
+      get: "/v1/signin/user"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to signin user";
+      summary: "Get signin user";
+    };
+  }
+  rpc GetGoogleLoginURL(GetGoogleLoginURLRequest) returns (GetGoogleLoginURLResponse){
+    option (google.api.http) = {
+      get: "/v1/oauth/google/login"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get google login url";
+      summary: "Get google login url";
+      security: {};
+    };
+  }
+  rpc GoogleLoginCallback(GoogleLoginCallbackRequest) returns (GoogleLoginCallbackResponse){
+    option (google.api.http) = {
+      get: "/v1/oauth/google/callback"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get google login callback";
+      summary: "Get google login callback";
+      security: {};
+    };
+  }
+}
+
+message SignupRequest {
+  string username = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
+  string email = 2 [(validate.rules).string.email = true];
+  string password = 3 [(validate.rules).string = {min_len: 8, max_len: 30}];
+}
+
+message SignupResponse {
+  User user = 1;
+}
+
+message SigninRequest {
+  string email = 1 [(validate.rules).string.email = true];
+  string password = 2 [(validate.rules).string = {min_len: 8, max_len: 30}];
+}
+
+message SigninResponse {
+  string access_token = 1;
+  string token_type = 2;
+  int32 expires_in = 3;
+  string refresh_token = 4;
+}
+
+message SignoutRequest {
+}
+
+message SignoutResponse {
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  string access_token = 1;
+}
+
+message GetSigninUserRequest {
+}
+
+message GetSigninUserResponse {
+  User user = 1;
+}
+
+message GetGoogleLoginURLRequest {
+}
+
+message GetGoogleLoginURLResponse {
+  string url = 1;
+}
+
+message GoogleLoginCallbackRequest {
+  string state = 1;
+  string code = 2;
+}
+
+message GoogleLoginCallbackResponse {
+  string access_token = 1;
+  string token_type = 2;
+  int32 expires_in = 3;
+  string refresh_token = 4;
+}

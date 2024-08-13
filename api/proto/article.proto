@@ -18,6 +18,22 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
           url: "https://github.com/loak155/techbranch-backend";
       };
   };
+  security_definitions: {
+    security: {
+      key: "bearer"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "Authorization"
+        description: "Authentication token, prefixed by Bearer: Bearer <token>"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "bearer"
+    }
+  }
 };
 
 service ArticleService {
@@ -38,6 +54,7 @@ service ArticleService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get article";
       summary: "Get article";
+      security: {};
     };
   }
   rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse){
@@ -47,6 +64,7 @@ service ArticleService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to get articles";
       summary: "Get articles";
+      security: {};
     };
   }
   rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse){
