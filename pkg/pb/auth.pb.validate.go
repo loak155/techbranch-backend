@@ -35,22 +35,22 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on SignupRequest with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *SignupRequest) Validate() error {
+// Validate checks the field values on PreSignupRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *PreSignupRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on SignupRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in SignupRequestMultiError, or
-// nil if none found.
-func (m *SignupRequest) ValidateAll() error {
+// ValidateAll checks the field values on PreSignupRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PreSignupRequestMultiError, or nil if none found.
+func (m *PreSignupRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *SignupRequest) validate(all bool) error {
+func (m *PreSignupRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (m *SignupRequest) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetUsername()); l < 1 || l > 20 {
-		err := SignupRequestValidationError{
+		err := PreSignupRequestValidationError{
 			field:  "Username",
 			reason: "value length must be between 1 and 20 runes, inclusive",
 		}
@@ -69,7 +69,7 @@ func (m *SignupRequest) validate(all bool) error {
 	}
 
 	if err := m._validateEmail(m.GetEmail()); err != nil {
-		err = SignupRequestValidationError{
+		err = PreSignupRequestValidationError{
 			field:  "Email",
 			reason: "value must be a valid email address",
 			cause:  err,
@@ -81,7 +81,7 @@ func (m *SignupRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetPassword()); l < 8 || l > 30 {
-		err := SignupRequestValidationError{
+		err := PreSignupRequestValidationError{
 			field:  "Password",
 			reason: "value length must be between 8 and 30 runes, inclusive",
 		}
@@ -92,13 +92,13 @@ func (m *SignupRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return SignupRequestMultiError(errors)
+		return PreSignupRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-func (m *SignupRequest) _validateHostname(host string) error {
+func (m *PreSignupRequest) _validateHostname(host string) error {
 	s := strings.ToLower(strings.TrimSuffix(host, "."))
 
 	if len(host) > 253 {
@@ -128,7 +128,7 @@ func (m *SignupRequest) _validateHostname(host string) error {
 	return nil
 }
 
-func (m *SignupRequest) _validateEmail(addr string) error {
+func (m *PreSignupRequest) _validateEmail(addr string) error {
 	a, err := mail.ParseAddress(addr)
 	if err != nil {
 		return err
@@ -146,6 +146,210 @@ func (m *SignupRequest) _validateEmail(addr string) error {
 	}
 
 	return m._validateHostname(parts[1])
+}
+
+// PreSignupRequestMultiError is an error wrapping multiple validation errors
+// returned by PreSignupRequest.ValidateAll() if the designated constraints
+// aren't met.
+type PreSignupRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PreSignupRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PreSignupRequestMultiError) AllErrors() []error { return m }
+
+// PreSignupRequestValidationError is the validation error returned by
+// PreSignupRequest.Validate if the designated constraints aren't met.
+type PreSignupRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PreSignupRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PreSignupRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PreSignupRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PreSignupRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PreSignupRequestValidationError) ErrorName() string { return "PreSignupRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PreSignupRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPreSignupRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PreSignupRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PreSignupRequestValidationError{}
+
+// Validate checks the field values on PreSignupResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *PreSignupResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PreSignupResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PreSignupResponseMultiError, or nil if none found.
+func (m *PreSignupResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PreSignupResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return PreSignupResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// PreSignupResponseMultiError is an error wrapping multiple validation errors
+// returned by PreSignupResponse.ValidateAll() if the designated constraints
+// aren't met.
+type PreSignupResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PreSignupResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PreSignupResponseMultiError) AllErrors() []error { return m }
+
+// PreSignupResponseValidationError is the validation error returned by
+// PreSignupResponse.Validate if the designated constraints aren't met.
+type PreSignupResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PreSignupResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PreSignupResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PreSignupResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PreSignupResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PreSignupResponseValidationError) ErrorName() string {
+	return "PreSignupResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PreSignupResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPreSignupResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PreSignupResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PreSignupResponseValidationError{}
+
+// Validate checks the field values on SignupRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *SignupRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SignupRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in SignupRequestMultiError, or
+// nil if none found.
+func (m *SignupRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SignupRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Token
+
+	if len(errors) > 0 {
+		return SignupRequestMultiError(errors)
+	}
+
+	return nil
 }
 
 // SignupRequestMultiError is an error wrapping multiple validation errors
@@ -240,35 +444,6 @@ func (m *SignupResponse) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if all {
-		switch v := interface{}(m.GetUser()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, SignupResponseValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, SignupResponseValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return SignupResponseValidationError{
-				field:  "User",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
 
 	if len(errors) > 0 {
 		return SignupResponseMultiError(errors)

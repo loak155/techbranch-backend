@@ -2,19 +2,23 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strconv"
 
 	"github.com/loak155/techbranch-backend/internal/domain"
 	"github.com/loak155/techbranch-backend/internal/repository"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
+	"github.com/loak155/techbranch-backend/pkg/mail"
 	"github.com/loak155/techbranch-backend/pkg/oauth"
 	passwordManager "github.com/loak155/techbranch-backend/pkg/password"
 	"github.com/loak155/techbranch-backend/pkg/redis"
+	"github.com/loak155/techbranch-backend/pkg/uuid"
 )
 
 type IAuthUsecase interface {
-	Signup(user domain.User) (domain.User, error)
+	PreSignup(user domain.User) error
+	Signup(token string) error
 	Signin(email, password string) (accessToken, refreshToken string, expiresIn int, err error)
 	Signout(userID int) error
 	RefreshToken(refreshToken string) (accessToken string, err error)
@@ -30,22 +34,62 @@ type authUsecase struct {
 	redisAccessTokenManager  redis.RedisManager
 	redisRefreshTokenManager redis.RedisManager
 	googleManager            oauth.GoogleManager
+	presignupRedisManager    redis.RedisManager
+	mailManager              mail.MailManager
 }
 
-func NewAuthUsecase(repo repository.IUserRepository, jwtAccessTokenManager jwt.JwtManager, jwtRefreshTokenManager jwt.JwtManager, redisAccessTokenManager redis.RedisManager, redisRefreshTokenManager redis.RedisManager, googleManager oauth.GoogleManager) IAuthUsecase {
-	return &authUsecase{repo, jwtAccessTokenManager, jwtRefreshTokenManager, redisAccessTokenManager, redisRefreshTokenManager, googleManager}
+func NewAuthUsecase(repo repository.IUserRepository, jwtAccessTokenManager jwt.JwtManager, jwtRefreshTokenManager jwt.JwtManager, redisAccessTokenManager redis.RedisManager, redisRefreshTokenManager redis.RedisManager, googleManager oauth.GoogleManager, presignupRedisManager redis.RedisManager, mailManager mail.MailManager) IAuthUsecase {
+	return &authUsecase{repo, jwtAccessTokenManager, jwtRefreshTokenManager, redisAccessTokenManager, redisRefreshTokenManager, googleManager, presignupRedisManager, mailManager}
 }
 
-func (usecase *authUsecase) Signup(user domain.User) (domain.User, error) {
+func (usecase *authUsecase) PreSignup(user domain.User) error {
+	u, err := usecase.repo.GetUserByEmail(user.Email)
+	if err == nil {
+		if u.Email == user.Email {
+			return fmt.Errorf("user already exists")
+		} else {
+			return fmt.Errorf("failed to get user: %v", err)
+		}
+	}
+
 	hashedPassword, err := passwordManager.HashPassword(user.Password)
 	if err != nil {
-		return domain.User{}, fmt.Errorf("failed to hash password: %v", err)
+		return fmt.Errorf("failed to hash password: %v", err)
 	}
-	newUser := domain.User{Username: user.Username, Email: user.Email, Password: hashedPassword}
-	if err := usecase.repo.CreateUser(&newUser); err != nil {
-		return domain.User{}, err
+
+	b, err := json.Marshal(domain.User{Username: user.Username, Email: user.Email, Password: hashedPassword})
+	if err != nil {
+		return fmt.Errorf("failed to marshal user: %v", err)
 	}
-	return newUser, nil
+	userString := string(b)
+
+	uuid := uuid.NewUUID()
+	if err := usecase.presignupRedisManager.Set(context.Background(), uuid, userString); err != nil {
+		return fmt.Errorf("failed to set redis: %v", err)
+	}
+
+	if err := usecase.mailManager.SendPreSignUpMail([]string{user.Email}, uuid); err != nil {
+		return fmt.Errorf("failed to send mail: %v", err)
+	}
+
+	return nil
+}
+
+func (usecase *authUsecase) Signup(token string) error {
+	userString, err := usecase.presignupRedisManager.Get(context.Background(), token)
+	if err != nil {
+		return fmt.Errorf("failed to get redis: %v", err)
+	}
+
+	var user domain.User
+	if err := json.Unmarshal([]byte(userString), &user); err != nil {
+		return fmt.Errorf("failed to unmarshal user: %v", err)
+	}
+
+	if err := usecase.repo.CreateUser(&user); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (usecase *authUsecase) Signin(email, password string) (accessToken, refreshToken string, expiresIn int, err error) {

@@ -18,6 +18,7 @@ var AuthRequests = []AuthRequest{
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/signin/user$`), Auth: true},
 	{Mehtod: "POST", URL: regexp.MustCompile(`/v1/signout$`), Auth: true},
 	{Mehtod: "POST", URL: regexp.MustCompile(`/v1/signup$`), Auth: false},
+	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/signup`), Auth: false},
 
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/articles/[0-9]*/bookmarks$`), Auth: false},
 	{Mehtod: "DELETE", URL: regexp.MustCompile(`/v1/articles/[0-9]*/bookmarks$`), Auth: true},
@@ -49,6 +50,7 @@ var AuthMethods = map[string]bool{
 	"/proto.ArticleService/UpdateArticle": true,
 	"/proto.ArticleService/DeleteArticle": true,
 
+	"/proto.AuthService/PreSignup":           false,
 	"/proto.AuthService/Signup":              false,
 	"/proto.AuthService/Signin":              false,
 	"/proto.AuthService/Signout":             false,

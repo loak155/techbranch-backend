@@ -11,10 +11,20 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "user.proto";
 
 service AuthService {
-  rpc Signup(SignupRequest) returns (SignupResponse){
+  rpc PreSignup(PreSignupRequest) returns (PreSignupResponse){
     option (google.api.http) = {
       post: "/v1/signup"
       body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to pre signup";
+      summary: "Pre signup";
+      security: {};
+    };
+  }
+  rpc Signup(SignupRequest) returns (SignupResponse){
+    option (google.api.http) = {
+      get: "/v1/signup"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to signup";
@@ -83,14 +93,20 @@ service AuthService {
   }
 }
 
-message SignupRequest {
+message PreSignupRequest {
   string username = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
   string email = 2 [(validate.rules).string.email = true];
   string password = 3 [(validate.rules).string = {min_len: 8, max_len: 30}];
 }
 
+message PreSignupResponse {
+}
+
+message SignupRequest {
+  string token = 1;
+}
+
 message SignupResponse {
-  User user = 1;
 }
 
 message SigninRequest {

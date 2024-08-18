@@ -8,6 +8,7 @@ import (
 	"github.com/loak155/techbranch-backend/pkg/db"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
 	"github.com/loak155/techbranch-backend/pkg/logger"
+	"github.com/loak155/techbranch-backend/pkg/mail"
 	"github.com/loak155/techbranch-backend/pkg/oauth"
 	"github.com/loak155/techbranch-backend/pkg/pb"
 	"github.com/loak155/techbranch-backend/pkg/redis"
@@ -51,7 +52,9 @@ func NewGRPCServer(conf *config.Config) (*grpc.Server, pb.ArticleServiceServer, 
 	commentUsecase := usecase.NewCommentUsecase(commentRepository)
 	commentServer := NewCommentGRPCServer(grpcServer, commentUsecase)
 
-	authUsecase := usecase.NewAuthUsecase(userRepository, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *google)
+	mailManager := mail.NewMailManager(conf.MailAddress, conf.MailFrom, conf.MailUsername, conf.MailPassword)
+	presignupRedisManager := redis.NewRedisManager(conf.RedisAddress, conf.RedisPresignupDB, conf.PresignupExpires)
+	authUsecase := usecase.NewAuthUsecase(userRepository, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *google, *presignupRedisManager, *mailManager)
 	authServer := NewAuthGRPCServer(grpcServer, authUsecase)
 
 	healthServer := health.NewServer()

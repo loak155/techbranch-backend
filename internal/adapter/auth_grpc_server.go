@@ -14,6 +14,7 @@ import (
 )
 
 type IAuthGRPCServer interface {
+	PreSignup(ctx context.Context, req *pb.PreSignupRequest) (*pb.PreSignupResponse, error)
 	Signup(ctx context.Context, req *pb.SignupRequest) (*pb.SignupResponse, error)
 	Signin(ctx context.Context, req *pb.SigninRequest) (*pb.SigninResponse, error)
 	Signout(ctx context.Context, req *pb.SignoutRequest) (*pb.SignoutResponse, error)
@@ -34,13 +35,12 @@ func NewAuthGRPCServer(grpcServer *grpc.Server, usecase usecase.IAuthUsecase) pb
 	return &server
 }
 
-func (server *authGRPCServer) Signup(ctx context.Context, req *pb.SignupRequest) (*pb.SignupResponse, error) {
+func (server *authGRPCServer) PreSignup(ctx context.Context, req *pb.PreSignupRequest) (*pb.PreSignupResponse, error) {
 	if err := req.Validate(); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid argument: %v", err)
 	}
 
-	res := pb.SignupResponse{}
-	user, err := server.usecase.Signup(
+	err := server.usecase.PreSignup(
 		domain.User{
 			Username: req.Username,
 			Email:    req.Email,
@@ -48,19 +48,18 @@ func (server *authGRPCServer) Signup(ctx context.Context, req *pb.SignupRequest)
 		},
 	)
 	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to presignup: %v", err)
+	}
+
+	return &pb.PreSignupResponse{}, nil
+}
+
+func (server *authGRPCServer) Signup(ctx context.Context, req *pb.SignupRequest) (*pb.SignupResponse, error) {
+	if err := server.usecase.Signup(req.Token); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to signup: %v", err)
 	}
 
-	res.User = &pb.User{
-		Id:        int32(user.ID),
-		Username:  user.Username,
-		Email:     user.Email,
-		Password:  user.Password,
-		CreatedAt: &timestamppb.Timestamp{Seconds: int64(user.CreatedAt.Unix()), Nanos: int32(user.CreatedAt.Nanosecond())},
-		UpdatedAt: &timestamppb.Timestamp{Seconds: int64(user.UpdatedAt.Unix()), Nanos: int32(user.UpdatedAt.Nanosecond())},
-	}
-
-	return &res, nil
+	return &pb.SignupResponse{}, nil
 }
 
 func (server *authGRPCServer) Signin(ctx context.Context, req *pb.SigninRequest) (*pb.SigninResponse, error) {

@@ -648,7 +648,7 @@
       }
     },
     "/v1/signup": {
-      "post": {
+      "get": {
         "summary": "Signup",
         "description": "Use this API to signup",
         "operationId": "AuthService_Signup",
@@ -668,11 +668,42 @@
         },
         "parameters": [
           {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ],
+        "security": []
+      },
+      "post": {
+        "summary": "Pre signup",
+        "description": "Use this API to pre signup",
+        "operationId": "AuthService_PreSignup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoPreSignupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/protoSignupRequest"
+              "$ref": "#/definitions/protoPreSignupRequest"
             }
           }
         ],
@@ -1392,6 +1423,23 @@
         }
       }
     },
+    "protoPreSignupRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "protoPreSignupResponse": {
+      "type": "object"
+    },
     "protoRefreshTokenResponse": {
       "type": "object",
       "properties": {
@@ -1432,27 +1480,8 @@
     "protoSignoutResponse": {
       "type": "object"
     },
-    "protoSignupRequest": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
     "protoSignupResponse": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/protoUser"
-        }
-      }
+      "type": "object"
     },
     "protoUpdateArticleRequest": {
       "type": "object",
