@@ -28,6 +28,9 @@ type Config struct {
 	MailPassword            string        `env:"MAIL_PASSWORD"`
 	RedisPresignupDB        int           `env:"REDIS_PRESIGNUP_DB"`
 	PresignupExpires        time.Duration `env:"PRESIGNUP_EXPIRES"`
+	PresignupMailSubject    string        `env:"PRESIGNUP_MAIL_SUBJECT"`
+	PresignupMailTemplate   string        `env:"PRESIGNUP_MAIL_TEMPLATE"`
+	SignupURL               string        `env:"SIGNUP_URL"`
 }
 
 func Load() (*Config, error) {

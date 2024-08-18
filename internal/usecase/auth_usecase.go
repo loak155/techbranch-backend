@@ -35,11 +35,11 @@ type authUsecase struct {
 	redisRefreshTokenManager redis.RedisManager
 	googleManager            oauth.GoogleManager
 	presignupRedisManager    redis.RedisManager
-	mailManager              mail.MailManager
+	presignupMailManager     mail.PresignupMailManager
 }
 
-func NewAuthUsecase(repo repository.IUserRepository, jwtAccessTokenManager jwt.JwtManager, jwtRefreshTokenManager jwt.JwtManager, redisAccessTokenManager redis.RedisManager, redisRefreshTokenManager redis.RedisManager, googleManager oauth.GoogleManager, presignupRedisManager redis.RedisManager, mailManager mail.MailManager) IAuthUsecase {
-	return &authUsecase{repo, jwtAccessTokenManager, jwtRefreshTokenManager, redisAccessTokenManager, redisRefreshTokenManager, googleManager, presignupRedisManager, mailManager}
+func NewAuthUsecase(repo repository.IUserRepository, jwtAccessTokenManager jwt.JwtManager, jwtRefreshTokenManager jwt.JwtManager, redisAccessTokenManager redis.RedisManager, redisRefreshTokenManager redis.RedisManager, googleManager oauth.GoogleManager, presignupRedisManager redis.RedisManager, presignupMailManager mail.PresignupMailManager) IAuthUsecase {
+	return &authUsecase{repo, jwtAccessTokenManager, jwtRefreshTokenManager, redisAccessTokenManager, redisRefreshTokenManager, googleManager, presignupRedisManager, presignupMailManager}
 }
 
 func (usecase *authUsecase) PreSignup(user domain.User) error {
@@ -68,7 +68,7 @@ func (usecase *authUsecase) PreSignup(user domain.User) error {
 		return fmt.Errorf("failed to set redis: %v", err)
 	}
 
-	if err := usecase.mailManager.SendPreSignUpMail([]string{user.Email}, uuid); err != nil {
+	if err := usecase.presignupMailManager.SendPreSignUpMail([]string{user.Email}, user.Username, uuid); err != nil {
 		return fmt.Errorf("failed to send mail: %v", err)
 	}
 

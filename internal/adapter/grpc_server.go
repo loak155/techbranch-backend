@@ -52,9 +52,9 @@ func NewGRPCServer(conf *config.Config) (*grpc.Server, pb.ArticleServiceServer, 
 	commentUsecase := usecase.NewCommentUsecase(commentRepository)
 	commentServer := NewCommentGRPCServer(grpcServer, commentUsecase)
 
-	mailManager := mail.NewMailManager(conf.MailAddress, conf.MailFrom, conf.MailUsername, conf.MailPassword)
+	presignupMailManager, _ := mail.NewPresignupMailManager(conf.MailAddress, conf.MailFrom, conf.MailUsername, conf.MailPassword, conf.PresignupMailSubject, conf.PresignupMailTemplate, conf.SignupURL)
 	presignupRedisManager := redis.NewRedisManager(conf.RedisAddress, conf.RedisPresignupDB, conf.PresignupExpires)
-	authUsecase := usecase.NewAuthUsecase(userRepository, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *google, *presignupRedisManager, *mailManager)
+	authUsecase := usecase.NewAuthUsecase(userRepository, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *google, *presignupRedisManager, *presignupMailManager)
 	authServer := NewAuthGRPCServer(grpcServer, authUsecase)
 
 	healthServer := health.NewServer()

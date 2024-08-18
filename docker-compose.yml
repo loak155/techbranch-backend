@@ -21,6 +21,16 @@ services:
       - 6379:6379
     volumes:
       - redis-data:/data
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp
+    volumes:
+      - mailhog-data:/tmp
   api:
     build:
       context: .
@@ -33,9 +43,11 @@ services:
     environment:
       DB_SOURCE: postgres://root:secret@postgres:5432/techbranch?sslmode=disable
       REDIS_ADDRESS: redis:6379
+      MAIL_ADDRESS: mailhog:1025
     depends_on:
       - postgres
     command: [ "/app/main"]
 volumes:
   db-data:
   redis-data:
+  mailhog-data:

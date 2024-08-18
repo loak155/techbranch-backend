@@ -10,6 +10,7 @@ WORKDIR /app
 COPY --from=development /app/main .
 COPY migrations ./migrations
 COPY docs/swagger ./docs/swagger
+COPY ./pkg/mail/presignup.tmpl ./pkg/mail/presignup.tmpl
 
 EXPOSE 8080 9090
 CMD [ "/app/main" ]
