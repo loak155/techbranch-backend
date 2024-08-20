@@ -22,10 +22,8 @@ type Config struct {
 	OauthGoogleClientID     string        `env:"OAUTH_GOOGLE_CLIENT_ID"`
 	OauthGoogleClientSecret string        `env:"OAUTH_GOOGLE_CLIENT_SECRET"`
 	OauthGoogleRedirectURL  string        `env:"OAUTH_GOOGLE_REDIRECT_URL"`
-	MailAddress             string        `env:"MAIL_ADDRESS"`
-	MailFrom                string        `env:"MAIL_FROM"`
-	MailUsername            string        `env:"MAIL_USERNAME"`
-	MailPassword            string        `env:"MAIL_PASSWORD"`
+	GmailFrom               string        `env:"GMAIL_FROM"`
+	GmailPassword           string        `env:"GMAIL_PASSWORD"`
 	RedisPresignupDB        int           `env:"REDIS_PRESIGNUP_DB"`
 	PresignupExpires        time.Duration `env:"PRESIGNUP_EXPIRES"`
 	PresignupMailSubject    string        `env:"PRESIGNUP_MAIL_SUBJECT"`

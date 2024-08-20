@@ -7,7 +7,7 @@ import (
 )
 
 type PresignupMailManager struct {
-	mailManager *MailManager
+	mailManager *GmailManager
 	subject     string
 	tmpl        *template.Template
 	signupURL   string
@@ -18,9 +18,8 @@ type TemplateData struct {
 	URL      string
 }
 
-func NewPresignupMailManager(address, from, username, password, subject, templateFilePath, signupURL string) (*PresignupMailManager, error) {
-
-	mailManager := NewMailManager(address, from, username, password)
+func NewPresignupMailManager(from, password, subject, templateFilePath, signupURL string) (*PresignupMailManager, error) {
+	mailManager := NewGmailManager(from, password)
 
 	tmpl, err := template.ParseFiles(templateFilePath)
 	if err != nil {
