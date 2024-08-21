@@ -11,7 +11,7 @@ var AuthRequests = []AuthRequest{
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/articles/[0-9]*$`), Auth: false},
 	{Mehtod: "DELETE", URL: regexp.MustCompile(`/v1/articles/[0-9]*$`), Auth: true},
 
-	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/oauth/google/callback$`), Auth: false},
+	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/oauth/google/callback`), Auth: false},
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/oauth/google/login$`), Auth: false},
 	{Mehtod: "POST", URL: regexp.MustCompile(`/v1/refresh-token$`), Auth: false},
 	{Mehtod: "POST", URL: regexp.MustCompile(`/v1/signin$`), Auth: false},

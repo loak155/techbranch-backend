@@ -62,11 +62,16 @@ func (usecase *userUsecase) ListUsers(offset, limit int) ([]domain.User, error) 
 }
 
 func (usecase *userUsecase) UpdateUser(user domain.User) (domain.User, error) {
-	hashedPassword, err := password.HashPassword(user.Password)
-	if err != nil {
-		return domain.User{}, fmt.Errorf("failed to hash password: %v", err)
+	updatedUser := domain.User{}
+	if user.Password == "" {
+		updatedUser = domain.User{ID: user.ID, Username: user.Username, Email: user.Email}
+	} else {
+		hashedPassword, err := password.HashPassword(user.Password)
+		if err != nil {
+			return domain.User{}, fmt.Errorf("failed to hash password: %v", err)
+		}
+		updatedUser = domain.User{ID: user.ID, Username: user.Username, Email: user.Email, Password: hashedPassword}
 	}
-	updatedUser := domain.User{ID: user.ID, Username: user.Username, Email: user.Email, Password: hashedPassword}
 	if err := usecase.repo.UpdateUser(&updatedUser); err != nil {
 		return domain.User{}, err
 	}

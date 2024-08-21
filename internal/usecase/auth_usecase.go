@@ -179,8 +179,14 @@ func (usecase *authUsecase) GoogleLoginCallback(state, code string) (accessToken
 	user, err := usecase.repo.GetUserByEmail(userInfo.Email)
 	// if not exist, create user
 	if err != nil {
-		user = &domain.User{Username: userInfo.Name, Email: userInfo.Email}
+		user = &domain.User{Username: userInfo.Name, Email: userInfo.Email, GoogleID: userInfo.ID}
 		if err := usecase.repo.CreateUser(user); err != nil {
+			return "", "", 0, err
+		}
+		// if exist and google id is empty, update google id
+	} else if user.GoogleID == "" {
+		user.GoogleID = userInfo.ID
+		if err := usecase.repo.UpdateUser(user); err != nil {
 			return "", "", 0, err
 		}
 	}

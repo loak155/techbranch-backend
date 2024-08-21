@@ -98,9 +98,9 @@ message ListUsersResponse {
 
 message UpdateUserRequest {
   int32 id = 1;
-  string username = 2 [(validate.rules).string = {min_len: 2, max_len: 20}];
+  string username = 2 ;
   string email = 3 [(validate.rules).string.email = true];
-  string password = 4 [(validate.rules).string = {min_len: 8, max_len: 30}];
+  string password = 4;
 }
 
 message UpdateUserResponse {

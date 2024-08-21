@@ -18,7 +18,8 @@ Table users {
   id bigserial [pk]
   username varchar [not null]
   email varchar [not null, unique]
-  password varchar [not null]
+  password varchar
+  google_id varchar
   created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
   updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
 }

@@ -1142,16 +1142,7 @@ func (m *UpdateUserRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if l := utf8.RuneCountInString(m.GetUsername()); l < 2 || l > 20 {
-		err := UpdateUserRequestValidationError{
-			field:  "Username",
-			reason: "value length must be between 2 and 20 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Username
 
 	if err := m._validateEmail(m.GetEmail()); err != nil {
 		err = UpdateUserRequestValidationError{
@@ -1165,16 +1156,7 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetPassword()); l < 8 || l > 30 {
-		err := UpdateUserRequestValidationError{
-			field:  "Password",
-			reason: "value length must be between 8 and 30 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Password
 
 	if len(errors) > 0 {
 		return UpdateUserRequestMultiError(errors)
