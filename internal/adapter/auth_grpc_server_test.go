@@ -11,21 +11,23 @@ import (
 	"github.com/loak155/techbranch-backend/mock"
 	myContext "github.com/loak155/techbranch-backend/pkg/context"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
+	"github.com/loak155/techbranch-backend/pkg/mail"
 	"github.com/loak155/techbranch-backend/pkg/oauth"
 	"github.com/loak155/techbranch-backend/pkg/password"
 	"github.com/loak155/techbranch-backend/pkg/pb"
+	smtpmock "github.com/mocktools/go-smtp-mock/v2"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 )
 
-func TestSignup(t *testing.T) {
+func TestPreSignup(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *pb.SignupRequest
+		req *pb.PreSignupRequest
 	}
 
-	req := &pb.SignupRequest{
+	req := &pb.PreSignupRequest{
 		Username: "test_user",
 		Email:    "test@example.com",
 		Password: "password",
@@ -35,7 +37,7 @@ func TestSignup(t *testing.T) {
 		name          string
 		args          args
 		buildStubs    func(repo *mock.MockIUserRepository)
-		checkResponse func(t *testing.T, res *pb.SignupResponse, err error)
+		checkResponse func(t *testing.T, res *pb.PreSignupResponse, err error)
 	}{
 		{
 			name: "OK",
@@ -44,45 +46,44 @@ func TestSignup(t *testing.T) {
 				req: req,
 			},
 			buildStubs: func(repo *mock.MockIUserRepository) {
-				repo.EXPECT().CreateUser(gomock.Any()).Return(nil)
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{}, gorm.ErrRecordNotFound)
 			},
-			checkResponse: func(t *testing.T, res *pb.SignupResponse, err error) {
+			checkResponse: func(t *testing.T, res *pb.PreSignupResponse, err error) {
 				assert.NoError(t, err)
-				assert.Equal(t, req.Username, res.User.Username)
-				assert.Equal(t, req.Email, res.User.Email)
-				assert.NoError(t, password.CheckPassword(req.Password, res.User.Password))
-				assert.NotNil(t, res.User.CreatedAt)
-				assert.NotNil(t, res.User.UpdatedAt)
 			},
 		},
 		{
 			name: "InvalidArgument",
 			args: args{
 				ctx: context.Background(),
-				req: &pb.SignupRequest{},
+				req: &pb.PreSignupRequest{},
 			},
 			buildStubs: func(repo *mock.MockIUserRepository) {
 			},
-			checkResponse: func(t *testing.T, res *pb.SignupResponse, err error) {
+			checkResponse: func(t *testing.T, res *pb.PreSignupResponse, err error) {
 				assert.Error(t, err)
-				assert.Contains(t, err.Error(), "invalid argument")
 			},
 		},
 		{
-			name: "FailedToCreateUser",
+			name: "UserAlreadyExists",
 			args: args{
 				ctx: context.Background(),
 				req: req,
 			},
 			buildStubs: func(repo *mock.MockIUserRepository) {
-				repo.EXPECT().CreateUser(gomock.Any()).Return(gorm.ErrInvalidData)
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{Email: req.Email}, nil)
 			},
-			checkResponse: func(t *testing.T, res *pb.SignupResponse, err error) {
+			checkResponse: func(t *testing.T, res *pb.PreSignupResponse, err error) {
 				assert.Error(t, err)
-				assert.Contains(t, err.Error(), "failed to signup")
 			},
 		},
 	}
+
+	testSMTPServer := smtpmock.New(smtpmock.ConfigurationAttr{})
+	if err := testSMTPServer.Start(); err != nil {
+		t.Fatal(err)
+	}
+	defer testSMTPServer.Stop()
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -97,13 +98,18 @@ func TestSignup(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, err := mail.NewPresignupMailManager("localhost", testSMTPServer.PortNumber(), "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			if err != nil {
+				t.Fatalf("failed to create presignup mail manager: %v", err)
+			}
+			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 
 			server := grpc.NewServer()
 			server.GracefulStop()
 
 			s := NewAuthGRPCServer(server, usecase)
-			res, err := s.Signup(tc.args.ctx, tc.args.req)
+			res, err := s.PreSignup(tc.args.ctx, tc.args.req)
 			tc.checkResponse(t, res, err)
 		})
 	}
@@ -195,7 +201,9 @@ func TestSignin(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 
 			server := grpc.NewServer()
 			server.GracefulStop()
@@ -249,7 +257,9 @@ func TestSignout(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 
 			server := grpc.NewServer()
 			server.GracefulStop()
@@ -318,7 +328,9 @@ func TestRefreshToken(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 
 			server := grpc.NewServer()
 			server.GracefulStop()
@@ -395,7 +407,9 @@ func TestGetSigninUser(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := usecase.NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 
 			server := grpc.NewServer()
 			server.GracefulStop()

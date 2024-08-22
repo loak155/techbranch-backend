@@ -8,13 +8,15 @@ import (
 	"github.com/loak155/techbranch-backend/internal/domain"
 	"github.com/loak155/techbranch-backend/mock"
 	"github.com/loak155/techbranch-backend/pkg/jwt"
+	"github.com/loak155/techbranch-backend/pkg/mail"
 	"github.com/loak155/techbranch-backend/pkg/oauth"
 	"github.com/loak155/techbranch-backend/pkg/password"
+	smtpmock "github.com/mocktools/go-smtp-mock/v2"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
 
-func TestSignup(t *testing.T) {
+func TestPreSignup(t *testing.T) {
 	type args struct {
 		user domain.User
 	}
@@ -29,7 +31,7 @@ func TestSignup(t *testing.T) {
 		name          string
 		args          args
 		buildStubs    func(repo *mock.MockIUserRepository)
-		checkResponse func(t *testing.T, resUser domain.User, err error)
+		checkResponse func(t *testing.T, err error)
 	}{
 		{
 			name: "OK",
@@ -37,15 +39,10 @@ func TestSignup(t *testing.T) {
 				user: reqUser,
 			},
 			buildStubs: func(repo *mock.MockIUserRepository) {
-				repo.EXPECT().CreateUser(gomock.Any()).Return(nil)
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{}, gorm.ErrRecordNotFound)
 			},
-			checkResponse: func(t *testing.T, resUser domain.User, err error) {
+			checkResponse: func(t *testing.T, err error) {
 				assert.NoError(t, err)
-				assert.Equal(t, reqUser.Username, resUser.Username)
-				assert.Equal(t, reqUser.Email, resUser.Email)
-				assert.NoError(t, password.CheckPassword(reqUser.Password, resUser.Password))
-				assert.NotNil(t, resUser.CreatedAt)
-				assert.NotNil(t, resUser.UpdatedAt)
 			},
 		},
 		{
@@ -54,15 +51,34 @@ func TestSignup(t *testing.T) {
 				user: domain.User{},
 			},
 			buildStubs: func(repo *mock.MockIUserRepository) {
-				repo.EXPECT().CreateUser(gomock.Any()).Return(gorm.ErrInvalidData)
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{}, gorm.ErrInvalidData)
 			},
-			checkResponse: func(t *testing.T, resUser domain.User, err error) {
+			checkResponse: func(t *testing.T, err error) {
+				assert.Error(t, err)
+			},
+		},
+		{
+			name: "UserAlreadyExists",
+			args: args{
+				user: domain.User{},
+			},
+			buildStubs: func(repo *mock.MockIUserRepository) {
+				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&reqUser, gorm.ErrInvalidData)
+			},
+			checkResponse: func(t *testing.T, err error) {
 				assert.Error(t, err)
 			},
 		},
 	}
 
+	testSMTPServer := smtpmock.New(smtpmock.ConfigurationAttr{})
+	if err := testSMTPServer.Start(); err != nil {
+		t.Fatal(err)
+	}
+	defer testSMTPServer.Stop()
+
 	for _, tc := range testCases {
+
 		t.Run(tc.name, func(t *testing.T) {
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
@@ -75,9 +91,14 @@ func TestSignup(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
-			resUser, err := usecase.Signup(tc.args.user)
-			tc.checkResponse(t, resUser, err)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, err := mail.NewPresignupMailManager("localhost", testSMTPServer.PortNumber(), "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			if err != nil {
+				t.Fatalf("failed to create presignup mail manager: %v", err)
+			}
+			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
+			err = usecase.PreSignup(tc.args.user)
+			tc.checkResponse(t, err)
 		})
 	}
 }
@@ -174,7 +195,9 @@ func TestSignin(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 			accessToken, refreshToken, expiresIn, err := usecase.Signin(tc.args.email, tc.args.password)
 			tc.checkResponse(t, accessToken, refreshToken, expiresIn, err)
 		})
@@ -218,7 +241,9 @@ func TestSignout(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 			err := usecase.Signout(tc.args.userID)
 			tc.checkResponse(t, err)
 		})
@@ -268,7 +293,9 @@ func TestRefreshToken(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 			accessToken, err := usecase.RefreshToken(tc.args.refreshToken)
 			tc.checkResponse(t, accessToken, err)
 		})
@@ -322,7 +349,9 @@ func TestGetSigninUser(t *testing.T) {
 			redisAccessTokenManager := mock.NewRedisMock(t, 0, time.Duration(time.Hour*1))
 			redisRefreshTokenManager := mock.NewRedisMock(t, 1, time.Duration(time.Hour*24*30))
 			googleManager := oauth.NewGoogleManager("state", "clientID", "clientSecret", "redirectURL")
-			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager)
+			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
+			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
+			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
 			user, err := usecase.GetSigninUser(tc.args.userID)
 			tc.checkResponse(t, user, err)
 		})
