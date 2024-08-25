@@ -95,6 +95,9 @@ func (server *articleGRPCServer) ListArticles(ctx context.Context, req *pb.ListA
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(article.UpdatedAt.Unix()), Nanos: int32(article.UpdatedAt.Nanosecond())},
 		})
 	}
+	if len(articleRes) == 0 {
+		res.Articles = append(res.Articles, &pb.Article{})
+	}
 
 	return &res, nil
 }

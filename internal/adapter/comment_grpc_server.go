@@ -75,6 +75,9 @@ func (server *commentGRPCServer) ListCommentsByUserID(ctx context.Context, req *
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(comment.UpdatedAt.Unix()), Nanos: int32(comment.UpdatedAt.Nanosecond())},
 		})
 	}
+	if len(commentRes) == 0 {
+		res.Comments = append(res.Comments, &pb.Comment{})
+	}
 
 	return &res, nil
 }
@@ -93,6 +96,9 @@ func (server *commentGRPCServer) ListCommentsByArticleID(ctx context.Context, re
 			CreatedAt: &timestamppb.Timestamp{Seconds: int64(comment.CreatedAt.Unix()), Nanos: int32(comment.CreatedAt.Nanosecond())},
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(comment.UpdatedAt.Unix()), Nanos: int32(comment.UpdatedAt.Nanosecond())},
 		})
+	}
+	if len(commentRes) == 0 {
+		res.Comments = append(res.Comments, &pb.Comment{})
 	}
 
 	return &res, nil

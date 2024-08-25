@@ -113,6 +113,9 @@ func (server *userGRPCServer) ListUsers(ctx context.Context, req *pb.ListUsersRe
 				UpdatedAt: &timestamppb.Timestamp{Seconds: int64(user.UpdatedAt.Unix()), Nanos: int32(user.UpdatedAt.Nanosecond())},
 			})
 		}
+		if len(users) == 0 {
+			res.Users = append(res.Users, &pb.User{})
+		}
 	}
 
 	return &res, nil
