@@ -86,6 +86,16 @@ service ArticleService {
       summary: "Delete article";
     };
   }
+  rpc GetArticleCount(GetArticleCountRequest) returns (GetArticleCountResponse){
+    option (google.api.http) = {
+      get: "/v1/articles/counts"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get article counts";
+      summary: "Get article counts";
+      security: {};
+    };
+  }
 }
 
 message Article {
@@ -140,4 +150,11 @@ message DeleteArticleRequest {
 }
 
 message DeleteArticleResponse {
+}
+
+message GetArticleCountRequest {
+}
+
+message GetArticleCountResponse {
+  int32 counts = 1;
 }

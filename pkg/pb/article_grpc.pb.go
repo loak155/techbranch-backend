@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ArticleService_CreateArticle_FullMethodName = "/proto.ArticleService/CreateArticle"
-	ArticleService_GetArticle_FullMethodName    = "/proto.ArticleService/GetArticle"
-	ArticleService_ListArticles_FullMethodName  = "/proto.ArticleService/ListArticles"
-	ArticleService_UpdateArticle_FullMethodName = "/proto.ArticleService/UpdateArticle"
-	ArticleService_DeleteArticle_FullMethodName = "/proto.ArticleService/DeleteArticle"
+	ArticleService_CreateArticle_FullMethodName   = "/proto.ArticleService/CreateArticle"
+	ArticleService_GetArticle_FullMethodName      = "/proto.ArticleService/GetArticle"
+	ArticleService_ListArticles_FullMethodName    = "/proto.ArticleService/ListArticles"
+	ArticleService_UpdateArticle_FullMethodName   = "/proto.ArticleService/UpdateArticle"
+	ArticleService_DeleteArticle_FullMethodName   = "/proto.ArticleService/DeleteArticle"
+	ArticleService_GetArticleCount_FullMethodName = "/proto.ArticleService/GetArticleCount"
 )
 
 // ArticleServiceClient is the client API for ArticleService service.
@@ -35,6 +36,7 @@ type ArticleServiceClient interface {
 	ListArticles(ctx context.Context, in *ListArticlesRequest, opts ...grpc.CallOption) (*ListArticlesResponse, error)
 	UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error)
 	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*DeleteArticleResponse, error)
+	GetArticleCount(ctx context.Context, in *GetArticleCountRequest, opts ...grpc.CallOption) (*GetArticleCountResponse, error)
 }
 
 type articleServiceClient struct {
@@ -90,6 +92,15 @@ func (c *articleServiceClient) DeleteArticle(ctx context.Context, in *DeleteArti
 	return out, nil
 }
 
+func (c *articleServiceClient) GetArticleCount(ctx context.Context, in *GetArticleCountRequest, opts ...grpc.CallOption) (*GetArticleCountResponse, error) {
+	out := new(GetArticleCountResponse)
+	err := c.cc.Invoke(ctx, ArticleService_GetArticleCount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleServiceServer is the server API for ArticleService service.
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type ArticleServiceServer interface {
 	ListArticles(context.Context, *ListArticlesRequest) (*ListArticlesResponse, error)
 	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleResponse, error)
 	DeleteArticle(context.Context, *DeleteArticleRequest) (*DeleteArticleResponse, error)
+	GetArticleCount(context.Context, *GetArticleCountRequest) (*GetArticleCountResponse, error)
 	mustEmbedUnimplementedArticleServiceServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedArticleServiceServer) UpdateArticle(context.Context, *UpdateA
 }
 func (UnimplementedArticleServiceServer) DeleteArticle(context.Context, *DeleteArticleRequest) (*DeleteArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticle not implemented")
+}
+func (UnimplementedArticleServiceServer) GetArticleCount(context.Context, *GetArticleCountRequest) (*GetArticleCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticleCount not implemented")
 }
 func (UnimplementedArticleServiceServer) mustEmbedUnimplementedArticleServiceServer() {}
 
@@ -224,6 +239,24 @@ func _ArticleService_DeleteArticle_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleService_GetArticleCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticleCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).GetArticleCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleService_GetArticleCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).GetArticleCount(ctx, req.(*GetArticleCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleService_ServiceDesc is the grpc.ServiceDesc for ArticleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteArticle",
 			Handler:    _ArticleService_DeleteArticle_Handler,
+		},
+		{
+			MethodName: "GetArticleCount",
+			Handler:    _ArticleService_GetArticleCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

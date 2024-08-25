@@ -1445,3 +1445,209 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteArticleResponseValidationError{}
+
+// Validate checks the field values on GetArticleCountRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetArticleCountRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetArticleCountRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetArticleCountRequestMultiError, or nil if none found.
+func (m *GetArticleCountRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetArticleCountRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetArticleCountRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetArticleCountRequestMultiError is an error wrapping multiple validation
+// errors returned by GetArticleCountRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetArticleCountRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetArticleCountRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetArticleCountRequestMultiError) AllErrors() []error { return m }
+
+// GetArticleCountRequestValidationError is the validation error returned by
+// GetArticleCountRequest.Validate if the designated constraints aren't met.
+type GetArticleCountRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetArticleCountRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetArticleCountRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetArticleCountRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetArticleCountRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetArticleCountRequestValidationError) ErrorName() string {
+	return "GetArticleCountRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetArticleCountRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetArticleCountRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetArticleCountRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetArticleCountRequestValidationError{}
+
+// Validate checks the field values on GetArticleCountResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetArticleCountResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetArticleCountResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetArticleCountResponseMultiError, or nil if none found.
+func (m *GetArticleCountResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetArticleCountResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Counts
+
+	if len(errors) > 0 {
+		return GetArticleCountResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetArticleCountResponseMultiError is an error wrapping multiple validation
+// errors returned by GetArticleCountResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetArticleCountResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetArticleCountResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetArticleCountResponseMultiError) AllErrors() []error { return m }
+
+// GetArticleCountResponseValidationError is the validation error returned by
+// GetArticleCountResponse.Validate if the designated constraints aren't met.
+type GetArticleCountResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetArticleCountResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetArticleCountResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetArticleCountResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetArticleCountResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetArticleCountResponseValidationError) ErrorName() string {
+	return "GetArticleCountResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetArticleCountResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetArticleCountResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetArticleCountResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetArticleCountResponseValidationError{}

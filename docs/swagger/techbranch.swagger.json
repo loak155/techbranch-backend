@@ -137,6 +137,31 @@
         ]
       }
     },
+    "/v1/articles/counts": {
+      "get": {
+        "summary": "Get article counts",
+        "description": "Use this API to get article counts",
+        "operationId": "ArticleService_GetArticleCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGetArticleCountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ArticleService"
+        ],
+        "security": []
+      }
+    },
     "/v1/articles/{articleId}/bookmarks": {
       "get": {
         "summary": "Get bookmarks by article ID",
@@ -1291,6 +1316,15 @@
     },
     "protoDeleteUserResponse": {
       "type": "object"
+    },
+    "protoGetArticleCountResponse": {
+      "type": "object",
+      "properties": {
+        "counts": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "protoGetArticleResponse": {
       "type": "object",

@@ -223,6 +223,24 @@ func local_request_ArticleService_DeleteArticle_0(ctx context.Context, marshaler
 
 }
 
+func request_ArticleService_GetArticleCount_0(ctx context.Context, marshaler runtime.Marshaler, client ArticleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetArticleCountRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := client.GetArticleCount(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_ArticleService_GetArticleCount_0(ctx context.Context, marshaler runtime.Marshaler, server ArticleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetArticleCountRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := server.GetArticleCount(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 // RegisterArticleServiceHandlerServer registers the http handlers for service ArticleService to "mux".
 // UnaryRPC     :call ArticleServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -351,6 +369,31 @@ func RegisterArticleServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		}
 
 		forward_ArticleService_DeleteArticle_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_ArticleService_GetArticleCount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/proto.ArticleService/GetArticleCount", runtime.WithHTTPPathPattern("/v1/articles/counts"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_ArticleService_GetArticleCount_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_ArticleService_GetArticleCount_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -505,6 +548,28 @@ func RegisterArticleServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
+	mux.Handle("GET", pattern_ArticleService_GetArticleCount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/proto.ArticleService/GetArticleCount", runtime.WithHTTPPathPattern("/v1/articles/counts"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_ArticleService_GetArticleCount_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_ArticleService_GetArticleCount_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -518,6 +583,8 @@ var (
 	pattern_ArticleService_UpdateArticle_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "articles"}, ""))
 
 	pattern_ArticleService_DeleteArticle_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "articles", "id"}, ""))
+
+	pattern_ArticleService_GetArticleCount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "articles", "counts"}, ""))
 )
 
 var (
@@ -530,4 +597,6 @@ var (
 	forward_ArticleService_UpdateArticle_0 = runtime.ForwardResponseMessage
 
 	forward_ArticleService_DeleteArticle_0 = runtime.ForwardResponseMessage
+
+	forward_ArticleService_GetArticleCount_0 = runtime.ForwardResponseMessage
 )

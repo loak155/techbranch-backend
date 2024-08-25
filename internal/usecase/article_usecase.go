@@ -11,6 +11,7 @@ type IArticleUsecase interface {
 	ListArticles(offset, limit int) ([]domain.Article, error)
 	UpdateArticle(article domain.Article) (domain.Article, error)
 	DeleteArticle(id int) error
+	GetArticleCount() (int, error)
 }
 
 type articleUsecase struct {
@@ -54,4 +55,12 @@ func (usecase *articleUsecase) UpdateArticle(article domain.Article) (domain.Art
 func (usecase *articleUsecase) DeleteArticle(id int) error {
 	err := usecase.repo.DeleteArticle(id)
 	return err
+}
+
+func (usecase *articleUsecase) GetArticleCount() (int, error) {
+	count, err := usecase.repo.GetArticleCount()
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
