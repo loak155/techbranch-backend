@@ -135,7 +135,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 
 	httpServer := &http.Server{
 		Addr:    conf.HttpServerAddress,
-		Handler: logger.HttpLogger(authHandler.HttpAuth(mux)),
+		Handler: logger.HttpLogger(enableCors(authHandler.HttpAuth(mux))),
 	}
 
 	waitGroup.Go(func() error {
@@ -161,5 +161,20 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, conf *conf
 		}
 		log.Info().Msg("HTTP gateway server is stopped")
 		return nil
+	})
+}
+
+func enableCors(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		h.ServeHTTP(w, r)
 	})
 }
