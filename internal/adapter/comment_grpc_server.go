@@ -43,6 +43,7 @@ func (server *commentGRPCServer) CreateComment(ctx context.Context, req *pb.Crea
 		domain.Comment{
 			UserID:    uint(req.UserId),
 			ArticleID: uint(req.ArticleId),
+			Content:   req.Content,
 		},
 	)
 	if err != nil {
@@ -53,6 +54,7 @@ func (server *commentGRPCServer) CreateComment(ctx context.Context, req *pb.Crea
 		Id:        int32(comment.ID),
 		UserId:    int32(comment.UserID),
 		ArticleId: int32(comment.ArticleID),
+		Content:   comment.Content,
 		CreatedAt: &timestamppb.Timestamp{Seconds: int64(comment.CreatedAt.Unix()), Nanos: int32(comment.CreatedAt.Nanosecond())},
 		UpdatedAt: &timestamppb.Timestamp{Seconds: int64(comment.UpdatedAt.Unix()), Nanos: int32(comment.UpdatedAt.Nanosecond())},
 	}
@@ -71,6 +73,7 @@ func (server *commentGRPCServer) ListCommentsByUserID(ctx context.Context, req *
 			Id:        int32(comment.ID),
 			UserId:    int32(comment.UserID),
 			ArticleId: int32(comment.ArticleID),
+			Content:   comment.Content,
 			CreatedAt: &timestamppb.Timestamp{Seconds: int64(comment.CreatedAt.Unix()), Nanos: int32(comment.CreatedAt.Nanosecond())},
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(comment.UpdatedAt.Unix()), Nanos: int32(comment.UpdatedAt.Nanosecond())},
 		})
@@ -93,6 +96,7 @@ func (server *commentGRPCServer) ListCommentsByArticleID(ctx context.Context, re
 			Id:        int32(comment.ID),
 			UserId:    int32(comment.UserID),
 			ArticleId: int32(comment.ArticleID),
+			Content:   comment.Content,
 			CreatedAt: &timestamppb.Timestamp{Seconds: int64(comment.CreatedAt.Unix()), Nanos: int32(comment.CreatedAt.Nanosecond())},
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(comment.UpdatedAt.Unix()), Nanos: int32(comment.UpdatedAt.Nanosecond())},
 		})
