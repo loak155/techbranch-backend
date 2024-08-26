@@ -136,7 +136,7 @@ func TestSignin(t *testing.T) {
 		name          string
 		args          args
 		buildStubs    func(repo *mock.MockIUserRepository)
-		checkResponse func(t *testing.T, accessToken, refreshToken string, expiresIn int, err error)
+		checkResponse func(t *testing.T, accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error)
 	}{
 		{
 			name: "OK",
@@ -147,11 +147,12 @@ func TestSignin(t *testing.T) {
 			buildStubs: func(repo *mock.MockIUserRepository) {
 				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&repoResUser, nil)
 			},
-			checkResponse: func(t *testing.T, accessToken, refreshToken string, expiresIn int, err error) {
+			checkResponse: func(t *testing.T, accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error) {
 				assert.NoError(t, err)
 				assert.NotNil(t, accessToken)
 				assert.NotNil(t, refreshToken)
-				assert.NotNil(t, expiresIn)
+				assert.NotNil(t, accessTokenExpiresIn)
+				assert.NotNil(t, refreshTokenExpiresIn)
 			},
 		},
 		{
@@ -163,7 +164,7 @@ func TestSignin(t *testing.T) {
 			buildStubs: func(repo *mock.MockIUserRepository) {
 				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&domain.User{}, gorm.ErrRecordNotFound)
 			},
-			checkResponse: func(t *testing.T, accessToken, refreshToken string, expiresIn int, err error) {
+			checkResponse: func(t *testing.T, accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error) {
 				assert.Error(t, err)
 			},
 		},
@@ -176,7 +177,7 @@ func TestSignin(t *testing.T) {
 			buildStubs: func(repo *mock.MockIUserRepository) {
 				repo.EXPECT().GetUserByEmail(gomock.Any()).Return(&repoResUnmatchUser, nil)
 			},
-			checkResponse: func(t *testing.T, accessToken, refreshToken string, expiresIn int, err error) {
+			checkResponse: func(t *testing.T, accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error) {
 				assert.Error(t, err)
 			},
 		},
@@ -198,8 +199,8 @@ func TestSignin(t *testing.T) {
 			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
 			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
 			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
-			accessToken, refreshToken, expiresIn, err := usecase.Signin(tc.args.email, tc.args.password)
-			tc.checkResponse(t, accessToken, refreshToken, expiresIn, err)
+			accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn, err := usecase.Signin(tc.args.email, tc.args.password)
+			tc.checkResponse(t, accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn, err)
 		})
 	}
 }

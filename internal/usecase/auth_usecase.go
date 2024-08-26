@@ -19,7 +19,7 @@ import (
 type IAuthUsecase interface {
 	PreSignup(user domain.User) error
 	Signup(token string) error
-	Signin(email, password string) (accessToken, refreshToken string, expiresIn int, err error)
+	Signin(email, password string) (accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error)
 	Signout(userID int) error
 	RefreshToken(refreshToken string) (accessToken string, err error)
 	GetSigninUser(userID int) (domain.User, error)
@@ -92,32 +92,33 @@ func (usecase *authUsecase) Signup(token string) error {
 	return nil
 }
 
-func (usecase *authUsecase) Signin(email, password string) (accessToken, refreshToken string, expiresIn int, err error) {
+func (usecase *authUsecase) Signin(email, password string) (accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error) {
 	user, err := usecase.repo.GetUserByEmail(email)
 	if err != nil {
-		return "", "", 0, fmt.Errorf("email or password is incorrect")
+		return "", "", 0, 0, fmt.Errorf("email or password is incorrect")
 	}
 	if err := passwordManager.CheckPassword(password, user.Password); err != nil {
-		return "", "", 0, fmt.Errorf("email or password is incorrect")
+		return "", "", 0, 0, fmt.Errorf("email or password is incorrect")
 	}
 	accessToken, accessTokenJti, err := usecase.jwtAccessTokenManager.GenerateToken(int(user.ID))
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, 0, err
 	}
 	refreshToken, refreshTokenJti, err := usecase.jwtRefreshTokenManager.GenerateToken(int(user.ID))
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, 0, err
 	}
 	err = usecase.redisAccessTokenManager.Set(context.Background(), strconv.Itoa(int(user.ID)), accessTokenJti)
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, 0, err
 	}
 	err = usecase.redisRefreshTokenManager.Set(context.Background(), strconv.Itoa(int(user.ID)), refreshTokenJti)
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, 0, err
 	}
-	expiresIn = usecase.jwtAccessTokenManager.GetExpiresIn()
-	return accessToken, refreshToken, expiresIn, nil
+	accessTokenExpiresIn = usecase.jwtAccessTokenManager.GetExpiresIn()
+	refreshTokenExpiresIn = usecase.jwtRefreshTokenManager.GetExpiresIn()
+	return accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn, nil
 }
 
 func (usecase *authUsecase) Signout(userID int) error {

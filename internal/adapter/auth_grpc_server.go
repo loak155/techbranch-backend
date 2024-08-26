@@ -67,15 +67,16 @@ func (server *authGRPCServer) Signin(ctx context.Context, req *pb.SigninRequest)
 		return nil, status.Errorf(codes.InvalidArgument, "invalid argument: %v", err)
 	}
 
-	accessToken, refreshToken, expiresIn, err := server.usecase.Signin(req.Email, req.Password)
+	accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn, err := server.usecase.Signin(req.Email, req.Password)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to signin: %v", err)
 	}
 	res := pb.SigninResponse{
-		AccessToken:  accessToken,
-		TokenType:    "Bearer",
-		ExpiresIn:    int32(expiresIn),
-		RefreshToken: refreshToken,
+		TokenType:             "Bearer",
+		AccessToken:           accessToken,
+		AccessTokenExpiresIn:  int32(accessTokenExpiresIn),
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiresIn: int32(refreshTokenExpiresIn),
 	}
 
 	return &res, nil

@@ -718,13 +718,15 @@ func (m *SigninResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AccessToken
-
 	// no validation rules for TokenType
 
-	// no validation rules for ExpiresIn
+	// no validation rules for AccessToken
+
+	// no validation rules for AccessTokenExpiresIn
 
 	// no validation rules for RefreshToken
+
+	// no validation rules for RefreshTokenExpiresIn
 
 	if len(errors) > 0 {
 		return SigninResponseMultiError(errors)

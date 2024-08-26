@@ -153,10 +153,11 @@ func TestSignin(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, res *pb.SigninResponse, err error) {
 				assert.NoError(t, err)
-				assert.NotEmpty(t, res.AccessToken)
 				assert.Equal(t, "Bearer", res.TokenType)
+				assert.NotEmpty(t, res.AccessToken)
 				assert.NotEmpty(t, res.RefreshToken)
-				assert.NotEmpty(t, res.ExpiresIn)
+				assert.NotEmpty(t, res.AccessTokenExpiresIn)
+				assert.NotEmpty(t, res.RefreshTokenExpiresIn)
 			},
 		},
 		{

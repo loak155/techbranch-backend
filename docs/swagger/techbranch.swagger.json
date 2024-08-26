@@ -1541,18 +1541,22 @@
     "protoSigninResponse": {
       "type": "object",
       "properties": {
-        "accessToken": {
-          "type": "string"
-        },
         "tokenType": {
           "type": "string"
         },
-        "expiresIn": {
+        "accessToken": {
+          "type": "string"
+        },
+        "accessTokenExpiresIn": {
           "type": "integer",
           "format": "int32"
         },
         "refreshToken": {
           "type": "string"
+        },
+        "refreshTokenExpiresIn": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
