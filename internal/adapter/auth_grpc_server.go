@@ -112,7 +112,6 @@ func (server *authGRPCServer) GetSigninUser(ctx context.Context, req *pb.GetSign
 		Id:        int32(user.ID),
 		Username:  user.Username,
 		Email:     user.Email,
-		Password:  user.Password,
 		CreatedAt: &timestamppb.Timestamp{Seconds: int64(user.CreatedAt.Unix()), Nanos: int32(user.CreatedAt.Nanosecond())},
 		UpdatedAt: &timestamppb.Timestamp{Seconds: int64(user.UpdatedAt.Unix()), Nanos: int32(user.UpdatedAt.Nanosecond())},
 	}
