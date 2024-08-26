@@ -13,6 +13,7 @@ type IArticleRepository interface {
 	UpdateArticle(article *domain.Article) error
 	DeleteArticle(id int) error
 	GetArticleCount() (int, error)
+	GetBookmarkedArticles(userID int) (*[]domain.Article, error)
 }
 
 type articleRepository struct {
@@ -54,4 +55,10 @@ func (repo *articleRepository) GetArticleCount() (int, error) {
 	var count int64
 	err := repo.db.Model(&domain.Article{}).Count(&count).Error
 	return int(count), err
+}
+
+func (repo *articleRepository) GetBookmarkedArticles(userID int) (*[]domain.Article, error) {
+	articles := &[]domain.Article{}
+	err := repo.db.Model(&domain.Article{}).Joins("JOIN bookmarks ON articles.id = bookmarks.article_id").Where("bookmarks.user_id = ?", userID).Find(articles).Error
+	return articles, err
 }

@@ -11,6 +11,7 @@ var AuthRequests = []AuthRequest{
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/articles/[0-9]*$`), Auth: false},
 	{Mehtod: "DELETE", URL: regexp.MustCompile(`/v1/articles/[0-9]*$`), Auth: true},
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/articles/counts$`), Auth: false},
+	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/users/[0-9]*/bookmarks/articles$`), Auth: true},
 
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/oauth/google/callback`), Auth: false},
 	{Mehtod: "GET", URL: regexp.MustCompile(`/v1/oauth/google/login$`), Auth: false},
@@ -45,12 +46,13 @@ var AuthRequests = []AuthRequest{
 }
 
 var AuthMethods = map[string]bool{
-	"/proto.ArticleService/CreateArticle":   true,
-	"/proto.ArticleService/GetArticle":      false,
-	"/proto.ArticleService/ListArticles":    false,
-	"/proto.ArticleService/UpdateArticle":   true,
-	"/proto.ArticleService/DeleteArticle":   true,
-	"/proto.ArticleService/GetArticleCount": false,
+	"/proto.ArticleService/CreateArticle":         true,
+	"/proto.ArticleService/GetArticle":            false,
+	"/proto.ArticleService/ListArticles":          false,
+	"/proto.ArticleService/UpdateArticle":         true,
+	"/proto.ArticleService/DeleteArticle":         true,
+	"/proto.ArticleService/GetArticleCount":       false,
+	"/proto.ArticleService/GetBookmarkedArticles": true,
 
 	"/proto.AuthService/PreSignup":           false,
 	"/proto.AuthService/Signup":              false,

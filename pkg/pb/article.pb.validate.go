@@ -1651,3 +1651,245 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetArticleCountResponseValidationError{}
+
+// Validate checks the field values on GetBookmarkedArticlesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetBookmarkedArticlesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetBookmarkedArticlesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetBookmarkedArticlesRequestMultiError, or nil if none found.
+func (m *GetBookmarkedArticlesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetBookmarkedArticlesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UserId
+
+	if len(errors) > 0 {
+		return GetBookmarkedArticlesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetBookmarkedArticlesRequestMultiError is an error wrapping multiple
+// validation errors returned by GetBookmarkedArticlesRequest.ValidateAll() if
+// the designated constraints aren't met.
+type GetBookmarkedArticlesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetBookmarkedArticlesRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetBookmarkedArticlesRequestMultiError) AllErrors() []error { return m }
+
+// GetBookmarkedArticlesRequestValidationError is the validation error returned
+// by GetBookmarkedArticlesRequest.Validate if the designated constraints
+// aren't met.
+type GetBookmarkedArticlesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetBookmarkedArticlesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetBookmarkedArticlesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetBookmarkedArticlesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetBookmarkedArticlesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetBookmarkedArticlesRequestValidationError) ErrorName() string {
+	return "GetBookmarkedArticlesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetBookmarkedArticlesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetBookmarkedArticlesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetBookmarkedArticlesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetBookmarkedArticlesRequestValidationError{}
+
+// Validate checks the field values on GetBookmarkedArticlesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetBookmarkedArticlesResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetBookmarkedArticlesResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// GetBookmarkedArticlesResponseMultiError, or nil if none found.
+func (m *GetBookmarkedArticlesResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetBookmarkedArticlesResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetArticles() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetBookmarkedArticlesResponseValidationError{
+						field:  fmt.Sprintf("Articles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetBookmarkedArticlesResponseValidationError{
+						field:  fmt.Sprintf("Articles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetBookmarkedArticlesResponseValidationError{
+					field:  fmt.Sprintf("Articles[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetBookmarkedArticlesResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetBookmarkedArticlesResponseMultiError is an error wrapping multiple
+// validation errors returned by GetBookmarkedArticlesResponse.ValidateAll()
+// if the designated constraints aren't met.
+type GetBookmarkedArticlesResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetBookmarkedArticlesResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetBookmarkedArticlesResponseMultiError) AllErrors() []error { return m }
+
+// GetBookmarkedArticlesResponseValidationError is the validation error
+// returned by GetBookmarkedArticlesResponse.Validate if the designated
+// constraints aren't met.
+type GetBookmarkedArticlesResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetBookmarkedArticlesResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetBookmarkedArticlesResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetBookmarkedArticlesResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetBookmarkedArticlesResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetBookmarkedArticlesResponseValidationError) ErrorName() string {
+	return "GetBookmarkedArticlesResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetBookmarkedArticlesResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetBookmarkedArticlesResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetBookmarkedArticlesResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetBookmarkedArticlesResponseValidationError{}

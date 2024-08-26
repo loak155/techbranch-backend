@@ -1056,6 +1056,39 @@
         ]
       }
     },
+    "/v1/users/{userId}/bookmarks/articles": {
+      "get": {
+        "summary": "Get bookmarked articles",
+        "description": "Use this API to get bookmarked articles",
+        "operationId": "ArticleService_GetBookmarkedArticles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGetBookmarkedArticlesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "ArticleService"
+        ]
+      }
+    },
     "/v1/users/{userId}/comments": {
       "get": {
         "summary": "Get comments by user ID",
@@ -1340,6 +1373,18 @@
         "count": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "protoGetBookmarkedArticlesResponse": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoArticle"
+          }
         }
       }
     },

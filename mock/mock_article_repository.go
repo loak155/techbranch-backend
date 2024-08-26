@@ -92,6 +92,21 @@ func (mr *MockIArticleRepositoryMockRecorder) GetArticleCount() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArticleCount", reflect.TypeOf((*MockIArticleRepository)(nil).GetArticleCount))
 }
 
+// GetBookmarkedArticles mocks base method.
+func (m *MockIArticleRepository) GetBookmarkedArticles(userID int) (*[]domain.Article, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookmarkedArticles", userID)
+	ret0, _ := ret[0].(*[]domain.Article)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookmarkedArticles indicates an expected call of GetBookmarkedArticles.
+func (mr *MockIArticleRepositoryMockRecorder) GetBookmarkedArticles(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookmarkedArticles", reflect.TypeOf((*MockIArticleRepository)(nil).GetBookmarkedArticles), userID)
+}
+
 // ListArticles mocks base method.
 func (m *MockIArticleRepository) ListArticles(offset, limit int) (*[]domain.Article, error) {
 	m.ctrl.T.Helper()

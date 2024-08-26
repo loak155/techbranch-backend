@@ -19,6 +19,7 @@ type IArticleGRPCServer interface {
 	UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) (*pb.UpdateArticleResponse, error)
 	DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) (*pb.DeleteArticleResponse, error)
 	GetArticleCount(ctx context.Context, req *pb.GetArticleCountRequest) (*pb.GetArticleCountResponse, error)
+	GetBookmarkedArticles(ctx context.Context, req *pb.GetBookmarkedArticlesRequest) (*pb.GetBookmarkedArticlesResponse, error)
 }
 
 type articleGRPCServer struct {
@@ -144,4 +145,27 @@ func (server *articleGRPCServer) GetArticleCount(ctx context.Context, req *pb.Ge
 	res.Counts = int32(count)
 
 	return &res, err
+}
+
+func (server *articleGRPCServer) GetBookmarkedArticles(ctx context.Context, req *pb.GetBookmarkedArticlesRequest) (*pb.GetBookmarkedArticlesResponse, error) {
+	res := pb.GetBookmarkedArticlesResponse{}
+	articleRes, err := server.usecase.GetBookmarkedArticles(int(req.UserId))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get bookmarked articles: %v", err)
+	}
+	for _, article := range articleRes {
+		res.Articles = append(res.Articles, &pb.Article{
+			Id:        int32(article.ID),
+			Title:     article.Title,
+			Url:       article.Url,
+			Image:     article.Image,
+			CreatedAt: &timestamppb.Timestamp{Seconds: int64(article.CreatedAt.Unix()), Nanos: int32(article.CreatedAt.Nanosecond())},
+			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(article.UpdatedAt.Unix()), Nanos: int32(article.UpdatedAt.Nanosecond())},
+		})
+	}
+	if len(articleRes) == 0 {
+		res.Articles = append(res.Articles, &pb.Article{})
+	}
+
+	return &res, nil
 }

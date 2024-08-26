@@ -96,6 +96,15 @@ service ArticleService {
       security: {};
     };
   }
+  rpc GetBookmarkedArticles(GetBookmarkedArticlesRequest) returns (GetBookmarkedArticlesResponse){
+    option (google.api.http) = {
+      get: "/v1/users/{user_id}/bookmarks/articles"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get bookmarked articles";
+      summary: "Get bookmarked articles";
+    };
+  }
 }
 
 message Article {
@@ -157,4 +166,12 @@ message GetArticleCountRequest {
 
 message GetArticleCountResponse {
   int32 counts = 1;
+}
+
+message GetBookmarkedArticlesRequest {
+  int32 user_id = 1;
+}
+
+message GetBookmarkedArticlesResponse {
+  repeated Article articles = 1;
 }

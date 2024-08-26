@@ -12,6 +12,7 @@ type IArticleUsecase interface {
 	UpdateArticle(article domain.Article) (domain.Article, error)
 	DeleteArticle(id int) error
 	GetArticleCount() (int, error)
+	GetBookmarkedArticles(userID int) ([]domain.Article, error)
 }
 
 type articleUsecase struct {
@@ -63,4 +64,12 @@ func (usecase *articleUsecase) GetArticleCount() (int, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (usecase *articleUsecase) GetBookmarkedArticles(userID int) ([]domain.Article, error) {
+	articles, err := usecase.repo.GetBookmarkedArticles(userID)
+	if err != nil {
+		return []domain.Article{}, err
+	}
+	return *articles, nil
 }
