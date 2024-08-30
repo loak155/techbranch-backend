@@ -320,7 +320,7 @@ func TestUpdateUser(t *testing.T) {
 				assert.NoError(t, err)
 				assert.Equal(t, reqUser.Username, resUser.Username)
 				assert.Equal(t, reqUser.Email, resUser.Email)
-				assert.Equal(t, reqUser.Password, resUser.Password)
+				assert.NoError(t, password.CheckPassword(reqUser.Password, resUser.Password))
 			},
 		},
 		{
