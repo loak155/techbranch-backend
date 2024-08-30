@@ -21,7 +21,7 @@ type IAuthUsecase interface {
 	Signup(token string) error
 	Signin(email, password string) (accessToken, refreshToken string, accessTokenExpiresIn, refreshTokenExpiresIn int, err error)
 	Signout(userID int) error
-	RefreshToken(refreshToken string) (accessToken string, err error)
+	RefreshToken(refreshToken string) (accessToken string, accessTokenExpiresIn int, err error)
 	GetSigninUser(userID int) (domain.User, error)
 	GetGoogleLoginURL() string
 	GoogleLoginCallback(state, code string) (accessToken, refreshToken string, expiresIn int, err error)
@@ -131,24 +131,26 @@ func (usecase *authUsecase) Signout(userID int) error {
 	return nil
 }
 
-func (usecase *authUsecase) RefreshToken(refreshToken string) (accessToken string, err error) {
+func (usecase *authUsecase) RefreshToken(refreshToken string) (accessToken string, accessTokenExpiresIn int, err error) {
 	claims, err := usecase.jwtRefreshTokenManager.ValidateToken(refreshToken)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 	userID, err := strconv.Atoi(claims.Subject)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 	accessToken, accessTokenJti, err := usecase.jwtAccessTokenManager.GenerateToken(userID)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 	err = usecase.redisAccessTokenManager.Set(context.Background(), claims.Subject, accessTokenJti)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
-	return accessToken, nil
+
+	accessTokenExpiresIn = usecase.jwtAccessTokenManager.GetExpiresIn()
+	return accessToken, accessTokenExpiresIn, nil
 }
 
 func (usecase *authUsecase) GetSigninUser(userID int) (domain.User, error) {

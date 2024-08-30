@@ -92,12 +92,14 @@ func (server *authGRPCServer) Signout(ctx context.Context, req *pb.SignoutReques
 }
 
 func (server *authGRPCServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequest) (*pb.RefreshTokenResponse, error) {
-	accessToken, err := server.usecase.RefreshToken(req.RefreshToken)
+	accessToken, accessTokenExpiresIn, err := server.usecase.RefreshToken(req.RefreshToken)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to refresh token: %v", err)
 	}
 	res := pb.RefreshTokenResponse{
-		AccessToken: accessToken,
+		TokenType:            "Bearer",
+		AccessToken:          accessToken,
+		AccessTokenExpiresIn: int32(accessTokenExpiresIn),
 	}
 
 	return &res, nil

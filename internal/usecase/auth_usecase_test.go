@@ -266,7 +266,7 @@ func TestRefreshToken(t *testing.T) {
 		name          string
 		args          args
 		buildStubs    func(repo *mock.MockIUserRepository)
-		checkResponse func(t *testing.T, accessToken string, err error)
+		checkResponse func(t *testing.T, accessToken string, accessTokenExpiresIn int, err error)
 	}{
 		{
 			name: "OK",
@@ -275,7 +275,7 @@ func TestRefreshToken(t *testing.T) {
 			},
 			buildStubs: func(repo *mock.MockIUserRepository) {
 			},
-			checkResponse: func(t *testing.T, accessToken string, err error) {
+			checkResponse: func(t *testing.T, accessToken string, accessTokenExpiresIn int, err error) {
 				assert.NoError(t, err)
 			},
 		},
@@ -297,8 +297,8 @@ func TestRefreshToken(t *testing.T) {
 			preSignupRedisManager := mock.NewRedisMock(t, 2, time.Duration(time.Hour*1))
 			preSignupMailManager, _ := mail.NewPresignupMailManager("localhost", 2525, "test@example.com", "", "Test Prsignup", "../../pkg/mail/presignup.tmpl", "http://localhost:8080/v1/signup?token=")
 			usecase := NewAuthUsecase(repo, *jwtAccessTokenManager, *jwtRefreshTokenManager, *redisAccessTokenManager, *redisRefreshTokenManager, *googleManager, *preSignupRedisManager, *preSignupMailManager)
-			accessToken, err := usecase.RefreshToken(tc.args.refreshToken)
-			tc.checkResponse(t, accessToken, err)
+			accessToken, accessTokenExpiresIn, err := usecase.RefreshToken(tc.args.refreshToken)
+			tc.checkResponse(t, accessToken, accessTokenExpiresIn, err)
 		})
 	}
 }

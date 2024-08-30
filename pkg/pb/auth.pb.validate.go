@@ -1132,7 +1132,11 @@ func (m *RefreshTokenResponse) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for TokenType
+
 	// no validation rules for AccessToken
+
+	// no validation rules for AccessTokenExpiresIn
 
 	if len(errors) > 0 {
 		return RefreshTokenResponseMultiError(errors)

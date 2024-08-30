@@ -133,7 +133,9 @@ message RefreshTokenRequest {
 }
 
 message RefreshTokenResponse {
-  string access_token = 1;
+  string token_type = 1;
+  string access_token = 2;
+  int32 access_token_expires_in = 3;
 }
 
 message GetSigninUserRequest {
