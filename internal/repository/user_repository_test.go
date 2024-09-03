@@ -15,6 +15,7 @@ func testUser() *domain.User {
 		Username: "test_username",
 		Email:    "test@example.com",
 		Password: "test_password",
+		GoogleID: "test_google_id",
 	}
 }
 
@@ -23,6 +24,7 @@ func testUser2() *domain.User {
 		Username: "test_username2",
 		Email:    "test2@example.com",
 		Password: "test_password",
+		GoogleID: "test_google_id",
 	}
 }
 
@@ -38,7 +40,7 @@ func TestCreateUser(t *testing.T) {
 
 	mock.ExpectBegin()
 	mock.ExpectQuery(regexp.QuoteMeta(
-		`INSERT INTO "users" ("username","email","password","created_at","updated_at") VALUES ($1,$2,$3,$4,$5) RETURNING "id"`)).
+		`INSERT INTO "users" ("username","email","password","google_id","created_at","updated_at") VALUES ($1,$2,$3,$4,$5,$6) RETURNING "id"`)).
 		WillReturnRows(rows)
 	mock.ExpectCommit()
 
@@ -61,8 +63,8 @@ func TestGetUser(t *testing.T) {
 		t.Errorf("Failed to initialize mock DB: %v", err)
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "username", "email", "password", "created_at", "updated_at"}).
-		AddRow(1, testUser.Username, testUser.Email, testUser.Password, time.Now(), time.Now())
+	rows := sqlmock.NewRows([]string{"id", "username", "email", "password", "google_id", "created_at", "updated_at"}).
+		AddRow(1, testUser.Username, testUser.Email, testUser.Password, testUser.GoogleID, time.Now(), time.Now())
 
 	mock.ExpectQuery(regexp.QuoteMeta(
 		`SELECT * FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" LIMIT $2`)).
@@ -88,8 +90,8 @@ func TestGetUserByEmail(t *testing.T) {
 		t.Errorf("Failed to initialize mock DB: %v", err)
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "username", "email", "password", "created_at", "updated_at"}).
-		AddRow(1, testUser.Username, testUser.Email, testUser.Password, time.Now(), time.Now())
+	rows := sqlmock.NewRows([]string{"id", "username", "email", "password", "google_id", "created_at", "updated_at"}).
+		AddRow(1, testUser.Username, testUser.Email, testUser.Password, testUser.GoogleID, time.Now(), time.Now())
 
 	mock.ExpectQuery(regexp.QuoteMeta(
 		`SELECT * FROM "users" WHERE email=$1 ORDER BY "users"."id" LIMIT $2`)).
@@ -116,9 +118,9 @@ func TestListUsers(t *testing.T) {
 		t.Errorf("Failed to initialize mock DB: %v", err)
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "username", "email", "password", "created_at", "updated_at"}).
-		AddRow(1, testUser1.Username, testUser1.Email, testUser1.Password, time.Now(), time.Now()).
-		AddRow(2, testUser2.Username, testUser2.Email, testUser2.Password, time.Now(), time.Now())
+	rows := sqlmock.NewRows([]string{"id", "username", "email", "password", "google_id", "created_at", "updated_at"}).
+		AddRow(1, testUser1.Username, testUser1.Email, testUser1.Password, testUser1.GoogleID, time.Now(), time.Now()).
+		AddRow(2, testUser2.Username, testUser2.Email, testUser2.Password, testUser2.GoogleID, time.Now(), time.Now())
 
 	mock.ExpectQuery(regexp.QuoteMeta(
 		`SELECT * FROM "users"`)).
@@ -147,13 +149,13 @@ func TestUpdateUser(t *testing.T) {
 
 	mock.ExpectBegin()
 	mock.ExpectQuery(regexp.QuoteMeta(
-		`INSERT INTO "users" ("username","email","password","created_at","updated_at") VALUES ($1,$2,$3,$4,$5) RETURNING "id"`)).
+		`INSERT INTO "users" ("username","email","password","google_id","created_at","updated_at") VALUES ($1,$2,$3,$4,$5,$6) RETURNING "id"`)).
 		WillReturnRows(rows)
 	mock.ExpectCommit()
 
 	mock.ExpectBegin()
 	mock.ExpectQuery(regexp.QuoteMeta(
-		`UPDATE "users" SET "username"=$1,"email"=$2,"password"=$3,"created_at"=$4,"updated_at"=$5 WHERE "id" = $6 RETURNING *`)).
+		`UPDATE "users" SET "username"=$1,"email"=$2,"password"=$3,"google_id"=$4,"created_at"=$5,"updated_at"=$6 WHERE "id" = $7 RETURNING *`)).
 		WillReturnRows(rows)
 	mock.ExpectCommit()
 

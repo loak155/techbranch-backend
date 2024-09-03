@@ -168,3 +168,53 @@ func TestDeleteArticle(t *testing.T) {
 		t.Errorf("Test Find Article: %v", err)
 	}
 }
+
+func TestGetArticleCount(t *testing.T) {
+	db, mock, err := mock.NewDBMock()
+	if err != nil {
+		t.Errorf("Failed to initialize mock DB: %v", err)
+	}
+
+	rows := sqlmock.NewRows([]string{"count"}).AddRow(1)
+
+	mock.ExpectQuery(regexp.QuoteMeta(
+		`SELECT count(*) FROM "articles"`)).
+		WillReturnRows(rows)
+
+	repo := NewArticleRepository(db)
+	_, err = repo.GetArticleCount()
+	if err != nil {
+		t.Fatalf("failed to get article: %s", err)
+	}
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Test Find Article: %v", err)
+	}
+}
+
+func TestGetBookmarkedArticles(t *testing.T) {
+	testArticle := testArticle()
+
+	db, mock, err := mock.NewDBMock()
+	if err != nil {
+		t.Errorf("Failed to initialize mock DB: %v", err)
+	}
+
+	rows := sqlmock.NewRows([]string{"id", "title", "url", "image", "created_at", "updated_at"}).
+		AddRow(1, testArticle.Title, testArticle.Url, time.Now(), time.Now(), nil)
+
+	mock.ExpectQuery(regexp.QuoteMeta(
+		`SELECT "articles"."id","articles"."title","articles"."url","articles"."image","articles"."created_at","articles"."updated_at" FROM "articles" JOIN bookmarks ON articles.id = bookmarks.article_id WHERE bookmarks.user_id = $1`)).
+		WithArgs(1).
+		WillReturnRows(rows)
+
+	repo := NewArticleRepository(db)
+	_, err = repo.GetBookmarkedArticles(1)
+	if err != nil {
+		t.Fatalf("failed to get article: %s", err)
+	}
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Test Find Article: %v", err)
+	}
+}
