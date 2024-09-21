@@ -81,9 +81,9 @@ func (server *bookmarkGRPCServer) ListBookmarksByUserID(ctx context.Context, req
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(bookmark.UpdatedAt.Unix()), Nanos: int32(bookmark.UpdatedAt.Nanosecond())},
 		})
 	}
-	if len(bookmarkRes) == 0 {
-		res.Bookmarks = append(res.Bookmarks, &pb.Bookmark{})
-	}
+	// if len(bookmarkRes) == 0 {
+	// 	res.Bookmarks = append(res.Bookmarks, &pb.Bookmark{})
+	// }
 
 	return &res, nil
 }
@@ -103,9 +103,9 @@ func (server *bookmarkGRPCServer) ListBookmarksByArticleID(ctx context.Context, 
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(bookmark.UpdatedAt.Unix()), Nanos: int32(bookmark.UpdatedAt.Nanosecond())},
 		})
 	}
-	if len(bookmarkRes) == 0 {
-		res.Bookmarks = append(res.Bookmarks, &pb.Bookmark{})
-	}
+	// if len(bookmarkRes) == 0 {
+	// 	res.Bookmarks = append(res.Bookmarks, &pb.Bookmark{})
+	// }
 
 	return &res, nil
 }

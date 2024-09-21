@@ -96,9 +96,6 @@ func (server *articleGRPCServer) ListArticles(ctx context.Context, req *pb.ListA
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(article.UpdatedAt.Unix()), Nanos: int32(article.UpdatedAt.Nanosecond())},
 		})
 	}
-	if len(articleRes) == 0 {
-		res.Articles = append(res.Articles, &pb.Article{})
-	}
 
 	return &res, nil
 }
@@ -162,9 +159,6 @@ func (server *articleGRPCServer) GetBookmarkedArticles(ctx context.Context, req 
 			CreatedAt: &timestamppb.Timestamp{Seconds: int64(article.CreatedAt.Unix()), Nanos: int32(article.CreatedAt.Nanosecond())},
 			UpdatedAt: &timestamppb.Timestamp{Seconds: int64(article.UpdatedAt.Unix()), Nanos: int32(article.UpdatedAt.Nanosecond())},
 		})
-	}
-	if len(articleRes) == 0 {
-		res.Articles = append(res.Articles, &pb.Article{})
 	}
 
 	return &res, nil
