@@ -184,31 +184,31 @@ func (usecase *authUsecase) GoogleLoginCallback(state, code string) (accessToken
 	if err != nil {
 		user = &domain.User{Username: userInfo.Name, Email: userInfo.Email, GoogleID: userInfo.ID}
 		if err := usecase.repo.CreateUser(user); err != nil {
-			return "", "", 0, err
+			return "", "", 0, fmt.Errorf("failed to create user: %v", err)
 		}
 		// if exist and google id is empty, update google id
 	} else if user.GoogleID == "" {
 		user.GoogleID = userInfo.ID
 		if err := usecase.repo.UpdateUser(user); err != nil {
-			return "", "", 0, err
+			return "", "", 0, fmt.Errorf("failed to update user: %v", err)
 		}
 	}
 
 	accessToken, accessTokenJti, err := usecase.jwtAccessTokenManager.GenerateToken(int(user.ID))
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, fmt.Errorf("failed to generate access token: %v", err)
 	}
 	refreshToken, refreshTokenJti, err := usecase.jwtRefreshTokenManager.GenerateToken(int(user.ID))
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, fmt.Errorf("failed to generate refresh token: %v", err)
 	}
 	err = usecase.redisAccessTokenManager.Set(context.Background(), strconv.Itoa(int(user.ID)), accessTokenJti)
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, fmt.Errorf("failed to set access token: %v", err)
 	}
 	err = usecase.redisRefreshTokenManager.Set(context.Background(), strconv.Itoa(int(user.ID)), refreshTokenJti)
 	if err != nil {
-		return "", "", 0, err
+		return "", "", 0, fmt.Errorf("failed to set refresh token: %v", err)
 	}
 	expiresIn = usecase.jwtAccessTokenManager.GetExpiresIn()
 	return accessToken, refreshToken, expiresIn, nil
