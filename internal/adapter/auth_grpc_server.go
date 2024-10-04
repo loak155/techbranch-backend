@@ -131,15 +131,16 @@ func (server *authGRPCServer) GetGoogleLoginURL(ctx context.Context, req *pb.Get
 }
 
 func (server *authGRPCServer) GoogleLoginCallback(ctx context.Context, req *pb.GoogleLoginCallbackRequest) (*pb.GoogleLoginCallbackResponse, error) {
-	accessToken, refreshToken, expiresIn, err := server.usecase.GoogleLoginCallback(req.State, req.Code)
+	accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn, err := server.usecase.GoogleLoginCallback(req.State, req.Code)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to google login callback: %v", err)
 	}
 	res := pb.GoogleLoginCallbackResponse{
-		AccessToken:  accessToken,
-		TokenType:    "Bearer",
-		ExpiresIn:    int32(expiresIn),
-		RefreshToken: refreshToken,
+		TokenType:             "Bearer",
+		AccessToken:           accessToken,
+		AccessTokenExpiresIn:  int32(accessTokenExpiresIn),
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiresIn: int32(refreshTokenExpiresIn),
 	}
 
 	return &res, nil

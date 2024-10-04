@@ -158,8 +158,9 @@ message GoogleLoginCallbackRequest {
 }
 
 message GoogleLoginCallbackResponse {
-  string access_token = 1;
-  string token_type = 2;
-  int32 expires_in = 3;
+  string token_type = 1;
+  string access_token = 2;
+  int32 access_token_expires_in = 3;
   string refresh_token = 4;
+  int32 refresh_token_expires_in = 5;
 }
